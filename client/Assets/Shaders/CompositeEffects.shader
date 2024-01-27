@@ -11,6 +11,7 @@ Shader "Hidden/CompositeEffects"
         #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 
         texture2D _CameraDepthTexture;
+        float4 _BlitTextureTexelSize;
 
     ENDHLSL
     
@@ -43,7 +44,7 @@ Shader "Hidden/CompositeEffects"
             #pragma fragment fp
 
             float4 fp(Varyings input) : SV_Target {
-                float2 samplePos = input.texcoord.xy * _BlitTextureSize.zw;
+                float2 samplePos = input.texcoord.xy * _BlitTextureTexelSize.zw;
                 float2 texPos1 = floor(samplePos - 0.5f) + 0.5f;
 
                 float2 f = samplePos - texPos1;
@@ -60,22 +61,22 @@ Shader "Hidden/CompositeEffects"
                 float2 texPos3 = texPos1 + 2;
                 float2 texPos12 = texPos1 + offset12;
 
-                texPos0 /= _BlitTextureSize.zw;
-                texPos3 /= _BlitTextureSize.zw;
-                texPos12 /= _BlitTextureSize.zw;
+                texPos0 /= _BlitTextureTexelSize.zw;
+                texPos3 /= _BlitTextureTexelSize.zw;
+                texPos12 /= _BlitTextureTexelSize.zw;
 
                 float4 result = 0.0f;
-                result += tex2D(_BlitTexture, float2(texPos0.x, texPos0.y)) * w0.x * w0.y;
-                result += tex2D(_BlitTexture, float2(texPos12.x, texPos0.y)) * w12.x * w0.y;
-                result += tex2D(_BlitTexture, float2(texPos3.x, texPos0.y)) * w3.x * w0.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos0.x, texPos0.y), _BlitMipLevel) * w0.x * w0.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos12.x, texPos0.y), _BlitMipLevel) * w12.x * w0.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos3.x, texPos0.y), _BlitMipLevel) * w3.x * w0.y;
 
-                result += tex2D(_BlitTexture, float2(texPos0.x, texPos12.y)) * w0.x * w12.y;
-                result += tex2D(_BlitTexture, float2(texPos12.x, texPos12.y)) * w12.x * w12.y;
-                result += tex2D(_BlitTexture, float2(texPos3.x, texPos12.y)) * w3.x * w12.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos0.x, texPos12.y), _BlitMipLevel) * w0.x * w12.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos12.x, texPos12.y), _BlitMipLevel) * w12.x * w12.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos3.x, texPos12.y), _BlitMipLevel) * w3.x * w12.y;
 
-                result += tex2D(_BlitTexture, float2(texPos0.x, texPos3.y)) * w0.x * w3.y;
-                result += tex2D(_BlitTexture, float2(texPos12.x, texPos3.y)) * w12.x * w3.y;
-                result += tex2D(_BlitTexture, float2(texPos3.x, texPos3.y)) * w3.x * w3.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos0.x, texPos3.y), _BlitMipLevel) * w0.x * w3.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos12.x, texPos3.y), _BlitMipLevel) * w12.x * w3.y;
+                result += SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, float2(texPos3.x, texPos3.y), _BlitMipLevel) * w3.x * w3.y;
 
                 return result;
             }
@@ -97,9 +98,9 @@ Shader "Hidden/CompositeEffects"
             float _Sharpness;
 
             float4 fp(Varyings input) : SV_Target {
-                float4 col = tex2D(_BlitTexture, input.texcoord.xy);
+                float4 col = SAMPLE_TEXTURE2D_X_LOD(_BlitTexture, sampler_PointClamp, input.texcoord.xy, _BlitMipLevel);
                 
-                float2 smokeUV = float2(input.texcoord.x, 1.0 - input.texcoord.y);
+                float2 smokeUV = float2(input.texcoord.x, input.texcoord.y);
     
                 float4 smokeAlbedo = tex2D(_SmokeTex, smokeUV);
                 float smokeMask = saturate(tex2D(_SmokeMaskTex, smokeUV).r);
@@ -108,10 +109,10 @@ Shader "Hidden/CompositeEffects"
                 float neighbor = _Sharpness * -1;
                 float center = _Sharpness * 4 + 1;
 
-                float4 n = tex2D(_SmokeTex, smokeUV + _BlitTextureSize.xy * float2(0, 1));
-                float4 e = tex2D(_SmokeTex, smokeUV + _BlitTextureSize.xy * float2(1, 0));
-                float4 s = tex2D(_SmokeTex, smokeUV + _BlitTextureSize.xy * float2(0, -1));
-                float4 w = tex2D(_SmokeTex, smokeUV + _BlitTextureSize.xy * float2(-1, 0));
+                float4 n = tex2D(_SmokeTex, smokeUV + _BlitTextureTexelSize.xy * float2(0, 1));
+                float4 e = tex2D(_SmokeTex, smokeUV + _BlitTextureTexelSize.xy * float2(1, 0));
+                float4 s = tex2D(_SmokeTex, smokeUV + _BlitTextureTexelSize.xy * float2(0, -1));
+                float4 w = tex2D(_SmokeTex, smokeUV + _BlitTextureTexelSize.xy * float2(-1, 0));
 
                 float4 sharpenedSmoke = n * neighbor + e * neighbor + smokeAlbedo * center + s * neighbor + w * neighbor;
 

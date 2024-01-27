@@ -301,6 +301,7 @@ float getDensity(float3 pos) {
 void CS_RayMarchSmoke (uint3 id : SV_DispatchThreadID) {
     float2 uv = (id.xy / float2(_BufferWidth, _BufferHeight));
     float sceneDepth = _DepthTex.SampleLevel(linear_clamp_sampler, uv, 0).r;
+    uv.y = 1.0 - uv.y;
 
     float3 sceneWorldPos = ComputeWorldSpacePosition(uv, sceneDepth);
 
