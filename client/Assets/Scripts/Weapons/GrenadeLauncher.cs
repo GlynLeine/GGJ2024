@@ -67,7 +67,9 @@ public class GrenadeLauncher : Weapon_Ranged
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
         m_grenade.voxelizer = voxelizer;
-        m_grenade.GetComponent<Rigidbody>().AddForce(transform.root.forward * grenadeForce);
+        Debug.Log("Fire");
+        m_grenade.GetComponent<Rigidbody>().isKinematic = false;
+        m_grenade.GetComponent<Rigidbody>().AddForce(transform.forward * grenadeForce,ForceMode.Impulse);
         m_grenade.GetComponent<NetworkObject>().Spawn();
     }
 
