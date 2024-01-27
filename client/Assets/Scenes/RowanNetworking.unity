@@ -205,8 +205,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 546348457}
   m_HandleRect: {fileID: 546348456}
   m_Direction: 2
-  m_Value: 0.000033666634
-  m_Size: 0.9966368
+  m_Value: 1
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2019,7 +2019,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 21.2
+  m_fontSize: 21.35
   m_fontSizeBase: 14
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2225,7 +2225,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 917817946}
-    PlayerPrefab: {fileID: 120039979377124296, guid: b606e575e9d2e224a978e0ec6363a90c,
+    PlayerPrefab: {fileID: 4863815606434991560, guid: 7b891cd3974e6554d9335a90fd463ae7,
       type: 3}
     Prefabs:
       NetworkPrefabsLists:
@@ -2396,7 +2396,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 26.55
+  m_fontSize: 26.7
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -2743,10 +2743,6 @@ MonoBehaviour:
   gameSceneName: Game
   networkType: 0
   playerType: 0
-  m_playerPrefab: {fileID: 120039979377124296, guid: b606e575e9d2e224a978e0ec6363a90c,
-    type: 3}
-  m_spectatorPrefab: {fileID: 4363748479839768129, guid: d5975c2cdfd358a40a14380937a0e49d,
-    type: 3}
 --- !u!4 &1047070233
 Transform:
   m_ObjectHideFlags: 0
@@ -3053,7 +3049,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.4
+  m_fontSize: 42.75
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -3547,7 +3543,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 1.8129054}
+  m_AnchoredPosition: {x: 0, y: -0.000016513473}
   m_SizeDelta: {x: 0, y: 557.29}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1592148569

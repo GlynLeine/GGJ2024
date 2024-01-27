@@ -40,8 +40,11 @@ Material:
     m_Floats:
     - _ChromaticAbberation: 0
     - _ChromaticAbberationFresnelSize: 0
+    - _ColourOutlineThickness: 0.038
     - _Float: 0.35
+    - _Float_1: -0.06
     - _MotionSicknessIntensity: 0
+    - _NormalOutlineThickness: 0.031
     - _StaticIntensity: 0
     - _StaticSpeed: 0
     m_Colors: []
