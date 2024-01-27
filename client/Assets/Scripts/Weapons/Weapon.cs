@@ -6,10 +6,10 @@ using Unity.Netcode;
 
 public abstract class Weapon : NetworkBehaviour
 {
-    public void OnFire()
+    public void OnFire(InputValue value)
     {
-        Attack();
+        Attack(value.isPressed);
     }
 
-    public abstract void Attack();
+    public abstract void Attack(bool isPressed);
 }

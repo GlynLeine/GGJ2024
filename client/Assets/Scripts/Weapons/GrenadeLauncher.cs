@@ -39,9 +39,9 @@ public class GrenadeLauncher : Weapon_Ranged
         Debug.Log("Amount of bounces: " + amountOfBounces + " input: " + axis);
     }
 
-    public override void Attack()
+    public override void Attack(bool isPressed)
     {
-        if (!IsOwner) return;
+        if (!IsOwner || !isPressed) return;
   
         if (onCoolDown || currentAmmo <= 0 || isReloading) return;
         currentAmmo--;
