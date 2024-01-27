@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
+[RequireComponent(typeof(Movement), typeof(BetterGravity), typeof(Rigidbody))]
 public class WallRun : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private Transform orientation;
+    [SerializeField] private float minimumSpeed = 15f;
+    private BetterGravity gravity;
+    private Movement movement;
 
     [Header("Detection")]
     [SerializeField] private float wallDistance = .5f;
@@ -36,18 +41,22 @@ public class WallRun : MonoBehaviour
 
     bool CanWallRun()
     {
-        return !Physics.Raycast(transform.position, Vector3.down, minimumJumpHeight);
+        return !Physics.Raycast(transform.position, Vector3.down, minimumJumpHeight) && rb.velocity.magnitude > minimumSpeed && !movement.Grounded;
     }
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        movement = GetComponent<Movement>();
+        gravity = GetComponent<BetterGravity> ();
     }
 
     void CheckWall()
     {
         wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallDistance);
+        Debug.DrawRay(transform.position, -orientation.right * wallDistance, Color.red);
         wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallDistance);
+        Debug.DrawRay(transform.position, orientation.right * wallDistance, Color.yellow);
     }
 
     private void Update()
@@ -79,44 +88,60 @@ public class WallRun : MonoBehaviour
 
     void StartWallRun()
     {
-        rb.useGravity = false;
-
+        Debug.Log("Starting wall run");
+        gravity.UseGravity = false;
+        movement.m_wallRunning = true;
         rb.AddForce(Vector3.down * wallRunGravity, ForceMode.Force);
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, wallRunfov, wallRunfovTime * Time.deltaTime);
 
         if (wallLeft)
-            tilt = Mathf.Lerp(tilt, -camTilt, camTiltTime * Time.deltaTime);
+            StartCoroutine(TiltCamera(-camTilt));
         else if (wallRight)
-            tilt = Mathf.Lerp(tilt, camTilt, camTiltTime * Time.deltaTime);
+            StartCoroutine(TiltCamera(camTilt));
 
 
-        if (Input.GetKeyDown(KeyCode.Space))
+    }
+
+    public void OnJump()
+    {
+        if (wallLeft)
         {
-            if (wallLeft)
-            {
-                Vector3 wallRunJumpDirection = transform.up + leftWallHit.normal;
-                rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-                rb.AddForce(wallRunJumpDirection * wallRunJumpForce * 100, ForceMode.Force);
-            }
-            else if (wallRight)
-            {
-                Vector3 wallRunJumpDirection = transform.up + rightWallHit.normal;
-                rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z); 
-                rb.AddForce(wallRunJumpDirection * wallRunJumpForce * 100, ForceMode.Force);
-            }
+            Vector3 wallRunJumpDirection = transform.up * .5f + leftWallHit.normal * 1.5f;
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(wallRunJumpDirection * wallRunJumpForce, ForceMode.Impulse);
+        }
+        else if (wallRight)
+        {
+            Vector3 wallRunJumpDirection = transform.up * .5f + rightWallHit.normal * 1.5f;
+            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            rb.AddForce(wallRunJumpDirection * wallRunJumpForce , ForceMode.Impulse);
         }
     }
 
+
     void StopWallRun()
     {
-        rb.useGravity = true;
-
+        Debug.Log("stopping wall run");
+        gravity.UseGravity = true;
+        movement.m_wallRunning = false;
         if (canFov)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, wallRunfovTime * Time.deltaTime);
         }
-        
-        tilt = Mathf.Lerp(tilt, 0, camTiltTime * Time.deltaTime);
+
+        StartCoroutine(TiltCamera(0));
+    }
+
+    IEnumerator TiltCamera(float endValue)
+    {
+        float timer = 0.0f;
+        while (timer < camTiltTime)
+        {
+            timer += Time.deltaTime;
+            tilt = Mathf.Lerp(tilt, endValue, 1 / camTiltTime * timer);
+            yield return new WaitForEndOfFrame();
+        }
+        yield break;
     }
 }

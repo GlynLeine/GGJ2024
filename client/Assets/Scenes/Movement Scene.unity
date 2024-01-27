@@ -666,9 +666,115 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41a990f132068334dadf254f76c7cf2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallRun: {fileID: 1937455423}
   sensX: 100
   sensY: 100
   orientation: {fileID: 1937455419}
+--- !u!1 &1630862141
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1630862145}
+  - component: {fileID: 1630862144}
+  - component: {fileID: 1630862143}
+  - component: {fileID: 1630862142}
+  m_Layer: 3
+  m_Name: Floor (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &1630862142
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630862141}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!23 &1630862143
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630862141}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0f29e3c1c576f6641b9e474f6b194480, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!33 &1630862144
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630862141}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1630862145
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1630862141}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.75, y: 25.5, z: -12}
+  m_LocalScale: {x: 25, y: 0.2, z: 25}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1891690221
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,9 +890,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1937455419}
   - component: {fileID: 1937455420}
+  - component: {fileID: 1937455423}
   - component: {fileID: 1937455421}
   - component: {fileID: 1937455422}
-  - component: {fileID: 1937455423}
+  - component: {fileID: 1937455424}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -803,7 +910,7 @@ Transform:
   m_GameObject: {fileID: 1937455418}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.104, z: 0}
+  m_LocalPosition: {x: 15.5, y: 25.604, z: -9.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -824,16 +931,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772f7c8e3aa16a84cb50bd3b875a1ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_wallRunning: 0
   m_camera: {fileID: 1267278344}
   m_moveSpeed: 10
-  m_maxSpeed: 20
+  m_maxSpeed: 15
   m_whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   m_maxSlopeAngle: 35
   m_deceleration_rate: 0.9
   m_jumpCooldown: 0.25
-  m_jumpForce: 100
+  m_jumpForce: 450
   m_crouchHeight: 0.5
   m_slideForce: 40
   m_slideCounterMovement: 0.2
@@ -862,7 +970,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &1937455422
 MonoBehaviour:
@@ -908,16 +1016,31 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 1937455419}
-  wallDistance: 0.5
+  minimumSpeed: 5
+  wallDistance: 0.75
   minimumJumpHeight: 1.5
-  wallRunGravity: 0
-  wallRunJumpForce: 25
+  wallRunGravity: 0.5
+  wallRunJumpForce: 15
   cam: {fileID: 1267278343}
   fov: 60
-  wallRunfov: 60
-  wallRunfovTime: 0
-  camTilt: 45
+  wallRunfov: 50
+  wallRunfovTime: 1
+  camTilt: 35
   camTiltTime: 0.5
+--- !u!114 &1937455424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937455418}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1fdc389bcbfa5e14fbb9ef401eab280a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GravityScale: 2
+  UseGravity: 1
 --- !u!1 &2093340467
 GameObject:
   m_ObjectHideFlags: 0
@@ -1017,7 +1140,7 @@ Transform:
   m_GameObject: {fileID: 2093340467}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.70710784}
-  m_LocalPosition: {x: 25.75, y: 24.75, z: 0.5}
+  m_LocalPosition: {x: 25.25, y: 24.75, z: 0.5}
   m_LocalScale: {x: 50, y: 50, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1029,6 +1152,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 215828994}
   - {fileID: 1891690225}
+  - {fileID: 1630862145}
   - {fileID: 1937455419}
   - {fileID: 219574091}
   - {fileID: 2093340471}
