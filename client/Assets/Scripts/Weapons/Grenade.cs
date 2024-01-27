@@ -10,10 +10,12 @@ public class Grenade : NetworkBehaviour
     [SerializeField] private float lifeSpan = 3;
     [HideInInspector] public int bounces = 0;
     [HideInInspector] public Voxelizer voxelizer;
-    
+
 
     private void Update()
     {
+        if (!IsOwner) return;
+
         lifeSpan -= Time.deltaTime;
         if (lifeSpan <= 0)
         {
@@ -32,18 +34,20 @@ public class Grenade : NetworkBehaviour
 
     private void explode()
     {
-        Debug.Log("KABOOM");
-        voxelizer.CreateSmoke(transform.position);
-        Destroy(gameObject);
+        //Debug.Log("KABOOM");
+        if (IsOwner)
+            FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
+        else
+            instantiateSmokeServerRpc();
+
         parent.DestroyServerRpc();
+        Destroy(gameObject);
     }
 
 
     [ServerRpc(RequireOwnership = false)]
     private void instantiateSmokeServerRpc()
     {
-        //do this at some point
-        //Gameobject smoke;
-        //smoke.GetComponent<NetworkObject>().Spawn();
+        FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
     }
 }

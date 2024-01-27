@@ -48,28 +48,25 @@ public class GrenadeLauncher : Weapon_Ranged
 
     public override void Attack(bool isPressed)
     {
-        if (!IsOwner || !isPressed) return;
-  
+        if (!IsOwner) return;
+
+        if (!isPressed) return;
+
         if (onCoolDown || currentAmmo <= 0 || isReloading) return;
         currentAmmo--;
         AttackServerRpc();
-
-
-        //Grenade grenade = Instantiate(grenadePrefab, transform.position + transform.forward, Quaternion.identity);
-        //grenade.Initialize(amountOfBounces, transform.forward, grenadeForce, voxelizer);
         onCoolDown = true;
     }
 
     [ServerRpc]//this spanws the grenade, not attacking the server
     private void AttackServerRpc()
     {
-        m_grenade = Instantiate(grenadePrefab, transform.root.position + (Vector3.up * 2) + transform.root.forward, Quaternion.identity);
+        m_grenade = Instantiate(grenadePrefab, transform.position + transform.up + transform.forward, Quaternion.identity);
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
         m_grenade.voxelizer = voxelizer;
-        Debug.Log("Fire");
         m_grenade.GetComponent<Rigidbody>().isKinematic = false;
-        m_grenade.GetComponent<Rigidbody>().AddForce(transform.forward * grenadeForce,ForceMode.Impulse);
+        m_grenade.GetComponent<Rigidbody>().AddForce(transform.GetComponentInChildren<Camera>().transform.forward * grenadeForce, ForceMode.Impulse);
         m_grenade.GetComponent<NetworkObject>().Spawn();
     }
 
