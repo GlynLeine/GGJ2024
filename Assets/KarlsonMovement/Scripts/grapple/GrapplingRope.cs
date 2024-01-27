@@ -52,7 +52,7 @@ public class GrapplingRope : MonoBehaviour
 
         spring.SetDamper(damper);
         spring.SetStrength(strength);
-        spring.Update(Time.deltaTime);
+        spring.Step(Time.deltaTime);
 
         var grapplePoint = grapplingGun.GetGrapplePoint();
         var gunTipPosition = grapplingGun.gunTip.position;

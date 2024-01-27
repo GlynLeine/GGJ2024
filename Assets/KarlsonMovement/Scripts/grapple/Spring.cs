@@ -11,7 +11,7 @@ public class Spring : MonoBehaviour
     private float value;
 
 #pragma warning disable UNT0006 // Incorrect message signature
-    public void Update(float deltaTime)
+    public void Step(float deltaTime)
 #pragma warning restore UNT0006 // Incorrect message signature
     {
         var direction = target - value >= 0 ? 1f : -1f;
