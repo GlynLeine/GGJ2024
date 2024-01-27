@@ -666,6 +666,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41a990f132068334dadf254f76c7cf2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wallRun: {fileID: 1937455423}
   sensX: 100
   sensY: 100
   orientation: {fileID: 1937455419}
@@ -929,6 +930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772f7c8e3aa16a84cb50bd3b875a1ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_wallRunning: 0
   m_camera: {fileID: 1267278344}
   m_moveSpeed: 10
   m_maxSpeed: 20
@@ -1013,16 +1015,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   orientation: {fileID: 1937455419}
+  minimumSpeed: 0
   wallDistance: 0.75
   minimumJumpHeight: 1.5
-  wallRunGravity: 0.2
+  wallRunGravity: 0.5
   wallRunJumpForce: 15
   cam: {fileID: 1267278343}
   fov: 60
   wallRunfov: 50
   wallRunfovTime: 1
-  camTilt: 45
-  camTiltTime: 1
+  camTilt: 35
+  camTiltTime: 0.5
 --- !u!1 &2093340467
 GameObject:
   m_ObjectHideFlags: 0
