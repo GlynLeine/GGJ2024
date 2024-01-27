@@ -11,10 +11,12 @@ public class Movement : MonoBehaviour
     private float m_threshold = 0.01f;
 
     private bool m_grounded = false;
+    public bool Grounded { get { return m_grounded; } }
     private bool m_jumping = false;
     private bool m_crouching = false;
     private bool m_running = false;
     private bool m_cancellingGrounded = false;
+    [HideInInspector] public bool m_wallRunning = false;
 
     private bool m_isMoving = false;
 
@@ -83,6 +85,7 @@ public class Movement : MonoBehaviour
         Vector2 inputValue = value.Get<Vector2>();
         Debug.Log("Move " + inputValue.ToString());
         m_movementInput = inputValue;
+        if (m_wallRunning) m_movementInput.x = 0;
         m_isMoving = inputValue.x != 0 || inputValue.y != 0;
     }
 
