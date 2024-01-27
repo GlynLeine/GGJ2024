@@ -38,11 +38,14 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ChromaticAbberation: 0.0879
-    - _ChromaticAbberationFresnelSize: 1.66
+    - _ChromaticAbberation: 0
+    - _ChromaticAbberationFresnelSize: 0
+    - _ColourOutlineThickness: 0.08
     - _Float: 0.35
-    - _MotionSicknessIntensity: 0.179
-    - _StaticIntensity: 0.39
-    - _StaticSpeed: 0.306
+    - _Float_1: -0.06
+    - _MotionSicknessIntensity: 0
+    - _NormalOutlineThickness: 0.099
+    - _StaticIntensity: 0
+    - _StaticSpeed: 0
     m_Colors: []
   m_BuildTextureStacks: []
