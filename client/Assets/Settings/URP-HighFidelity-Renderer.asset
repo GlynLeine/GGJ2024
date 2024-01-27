@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9847bc60e80e0847b603000486b7134, type: 3}
   m_Name: RayMarchedSmokeFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   settings:
     resolutionScale: 2
     seed: 0

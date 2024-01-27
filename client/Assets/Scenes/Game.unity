@@ -293,6 +293,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
         type: 3}
+      propertyPath: voxelSize
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
+        type: 3}
       propertyPath: boundsExtent.x
       value: 50
       objectReference: {fileID: 0}

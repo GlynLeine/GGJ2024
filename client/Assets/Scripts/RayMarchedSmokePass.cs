@@ -15,8 +15,8 @@ public class RayMarchedSmokePass : ScriptableRenderPass
 
     private int generateNoisePass, debugNoisePass, raymarchSmokePass;
 
-    private RenderTextureDescriptor noiseDescriptor, depthDescriptor;
-    private RTHandle noiseTex, depthTex;
+    private RenderTextureDescriptor noiseDescriptor, depthDescriptor, colorDescriptor;
+    private RTHandle noiseTex, depthTex, colorTex;
 
     private RenderTextureDescriptor smokeAlbedoFullDescriptor, smokeAlbedoHalfDescriptor, smokeAlbedoQuarterDescriptor;
     private RTHandle smokeAlbedoFullTex, smokeAlbedoHalfTex, smokeAlbedoQuarterTex;
@@ -112,6 +112,10 @@ public class RayMarchedSmokePass : ScriptableRenderPass
         depthDescriptor.width = cameraTextureDescriptor.width;
         depthDescriptor.height = cameraTextureDescriptor.height;
         RenderingUtils.ReAllocateIfNeeded(ref depthTex, depthDescriptor);
+
+        colorDescriptor.width = cameraTextureDescriptor.width;
+        colorDescriptor.height = cameraTextureDescriptor.height;
+        RenderingUtils.ReAllocateIfNeeded(ref colorTex, colorDescriptor);
     }
 
     void UpdateNoise()
@@ -191,6 +195,10 @@ public class RayMarchedSmokePass : ScriptableRenderPass
         depthDescriptor = new RenderTextureDescriptor(Screen.width, Screen.height, RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         depthDescriptor.enableRandomWrite = true;
         depthTex = RTHandles.Alloc(depthDescriptor);
+
+        colorDescriptor = new RenderTextureDescriptor(Screen.width, Screen.height, RenderTextureFormat.RGB111110Float, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        colorDescriptor.enableRandomWrite = true;
+        colorTex = RTHandles.Alloc(colorDescriptor);
     }
 
     private bool UpdateSettings()
@@ -237,6 +245,7 @@ public class RayMarchedSmokePass : ScriptableRenderPass
 
             //Create depth tex for compute shader
             Blit(cmd, cameraDepthHandle, depthTex, compositeMaterial, 0);
+            Blit(cmd, cameraColorHandle, colorTex);
 
             Matrix4x4 projMatrix = renderingData.cameraData.GetGPUProjectionMatrix();
             Matrix4x4 viewMatrix = renderingData.cameraData.GetViewMatrix();
@@ -342,7 +351,7 @@ public class RayMarchedSmokePass : ScriptableRenderPass
             compositeMaterial.SetFloat("_Sharpness", settings.sharpness);
             compositeMaterial.SetFloat("_DebugView", (int)settings.debugView);
 
-            Blit(cmd, cameraColorHandle, cameraColorHandle, compositeMaterial, 2);
+            Blit(cmd, colorTex, cameraColorHandle, compositeMaterial, 2);
         }
 
         //Execute the command buffer and release it back to the pool.
