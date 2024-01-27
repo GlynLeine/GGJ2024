@@ -1,43 +1,49 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Grenade : MonoBehaviour
+public class Grenade : NetworkBehaviour
 {
+    [HideInInspector] public GrenadeLauncher parent;
     [SerializeField] private float lifeSpan = 3;
-    private int bounces = 0;
-    private Voxelizer voxelizer;
+    [HideInInspector] public int bounces = 0;
+    [HideInInspector] public Voxelizer voxelizer;
     
-    public void Initialize(int bounces, Vector3 direction, float force, Voxelizer v)
-    {
-        this.bounces = bounces;
-        voxelizer = v;
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(direction *  force, ForceMode.Impulse);
-    }
 
     private void Update()
     {
         lifeSpan -= Time.deltaTime;
-        if(lifeSpan <= 0)
+        if (lifeSpan <= 0)
         {
-            Explode();
-        }
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        bounces -= 1;
-        if(bounces < 0)
-        {
-            Explode();
+            explode();
         }
     }
 
-    private void Explode()
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (!IsOwner) return;
+
+        bounces -= 1;
+        if (bounces < 0)
+            explode();
+    }
+
+    private void explode()
     {
         Debug.Log("KABOOM");
         voxelizer.CreateSmoke(transform.position);
         Destroy(gameObject);
+        parent.DestroyServerRpc();
+    }
+
+
+    [ServerRpc(RequireOwnership = false)]
+    private void instantiateSmokeServerRpc()
+    {
+        //do this at some point
+        //Gameobject smoke;
+        //smoke.GetComponent<NetworkObject>().Spawn();
     }
 }
