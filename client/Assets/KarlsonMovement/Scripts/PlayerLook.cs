@@ -11,7 +11,6 @@ public class PlayerLook : MonoBehaviour
     [SerializeField] private float sensX = 100f;
     [SerializeField] private float sensY = 100f;
 
-    //[SerializeField] private Transform cam = null;
     [SerializeField] private Transform orientation = null;
 
     private float m_mouseX;
@@ -37,7 +36,6 @@ public class PlayerLook : MonoBehaviour
 
         m_xRotation = Mathf.Clamp(m_xRotation, -90f, 90f);
 
-        //transform.rotation = Quaternion.Euler(xRotation, yRotation, wallRun.tilt);
         transform.rotation = Quaternion.Euler(m_xRotation, m_yRotation, 0);
         orientation.transform.rotation = Quaternion.Euler(0, m_yRotation, 0);
     }
