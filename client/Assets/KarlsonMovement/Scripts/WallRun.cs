@@ -1,13 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
-[RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(Movement), typeof(BetterGravity), typeof(Rigidbody))]
 public class WallRun : MonoBehaviour
 {
     [Header("Movement")]
     [SerializeField] private Transform orientation;
     [SerializeField] private float minimumSpeed = 15f;
+    private BetterGravity gravity;
     private Movement movement;
 
     [Header("Detection")]
@@ -46,6 +48,7 @@ public class WallRun : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
+        gravity = GetComponent<BetterGravity> ();
     }
 
     void CheckWall()
@@ -86,16 +89,16 @@ public class WallRun : MonoBehaviour
     void StartWallRun()
     {
         Debug.Log("Starting wall run");
-        rb.useGravity = false;
+        gravity.UseGravity = false;
         movement.m_wallRunning = true;
         rb.AddForce(Vector3.down * wallRunGravity, ForceMode.Force);
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, wallRunfov, wallRunfovTime * Time.deltaTime);
 
         if (wallLeft)
-            tilt = Mathf.Lerp(tilt, -camTilt, camTiltTime * Time.deltaTime);
+            StartCoroutine(TiltCamera(-camTilt));
         else if (wallRight)
-            tilt = Mathf.Lerp(tilt, camTilt, camTiltTime * Time.deltaTime);
+            StartCoroutine(TiltCamera(camTilt));
 
 
     }
@@ -120,13 +123,25 @@ public class WallRun : MonoBehaviour
     void StopWallRun()
     {
         Debug.Log("stopping wall run");
-        rb.useGravity = true;
+        gravity.UseGravity = true;
         movement.m_wallRunning = false;
         if (canFov)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, wallRunfovTime * Time.deltaTime);
         }
-        
-        tilt = Mathf.Lerp(tilt, 0, camTiltTime * Time.deltaTime);
+
+        StartCoroutine(TiltCamera(0));
+    }
+
+    IEnumerator TiltCamera(float endValue)
+    {
+        float timer = 0.0f;
+        while (timer < camTiltTime)
+        {
+            timer += Time.deltaTime;
+            tilt = Mathf.Lerp(tilt, endValue, 1 / camTiltTime * timer);
+            yield return new WaitForEndOfFrame();
+        }
+        yield break;
     }
 }

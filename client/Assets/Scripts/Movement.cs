@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour
 {
     private Vector2 m_movementInput = Vector2.zero;
@@ -102,7 +103,7 @@ public class Movement : MonoBehaviour
 
         Vector2 movement = Vector2.Max(Vector2.Min(mag + m_movementInput, new Vector2(m_maxSpeed, m_maxSpeed)), new Vector2(-m_maxSpeed, -m_maxSpeed)) - mag;
 
-        m_rb.AddForce((transform.forward * movement.y + transform.right * movement.x) * m_moveSpeed * Time.fixedDeltaTime * m_moveMultiplier, ForceMode.Acceleration);
+        m_rb.AddForce((transform.forward * .7f * movement.y + transform.right * 1.5f * movement.x).normalized * m_moveSpeed * Time.fixedDeltaTime * m_moveMultiplier, ForceMode.Acceleration);
         if(m_rb.velocity.magnitude > m_maxSpeed)
         {
             m_rb.velocity = m_rb.velocity.normalized * m_maxSpeed;
