@@ -423,6 +423,7 @@ GameObject:
   - component: {fileID: 1267278343}
   - component: {fileID: 1267278342}
   - component: {fileID: 1267278345}
+  - component: {fileID: 1267278346}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -548,6 +549,21 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!114 &1267278346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1267278341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41a990f132068334dadf254f76c7cf2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensX: 100
+  sensY: 100
+  orientation: {fileID: 1937455419}
 --- !u!1 &1891690221
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,14 +717,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772f7c8e3aa16a84cb50bd3b875a1ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_orientation: {fileID: 1937455419}
+  m_orientation: {fileID: 1267278344}
+  m_camera: {fileID: 1267278344}
   m_moveSpeed: 10
   m_maxSpeed: 30
   m_whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   m_maxSlopeAngle: 35
+  m_jumpCooldown: 0.25
   m_jumpForce: 100
+  m_crouchHeight: 0.5
+  m_slideForce: 40
+  m_slideCounterMovement: 0.2
 --- !u!54 &1937455421
 Rigidbody:
   m_ObjectHideFlags: 0
