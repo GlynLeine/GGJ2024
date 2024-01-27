@@ -16,6 +16,8 @@ public class Movement : MonoBehaviour
     private bool m_running = false;
     private bool m_cancellingGrounded = false;
 
+    private bool m_isMoving = false;
+
     private Rigidbody m_rb;
     private Vector3 m_normalVector = Vector3.up;
     private Vector3 m_wallNormalVector = Vector3.zero;
@@ -29,7 +31,7 @@ public class Movement : MonoBehaviour
     [SerializeField] private float m_maxSpeed = 50f;
     [SerializeField] private LayerMask m_whatIsGround;
     [SerializeField] private float m_maxSlopeAngle = 35f;
-
+    [SerializeField] private float m_deceleration_rate = .9f;
 
     [Header("Jumping")]
     [SerializeField] private float m_jumpCooldown = 0.25f;
@@ -73,23 +75,40 @@ public class Movement : MonoBehaviour
     void FixedUpdate()
     {
         Move();
+        
     }
 
     public void OnMove(InputValue value)
     {
-        Debug.Log("Move " + value.Get<Vector2>().ToString());
-        m_movementInput = value.Get<Vector2>();
+        Vector2 inputValue = value.Get<Vector2>();
+        Debug.Log("Move " + inputValue.ToString());
+        m_movementInput = inputValue;
+        m_isMoving = inputValue.x != 0 || inputValue.y != 0;
     }
 
     private void Move()
     {
+        Vector2 input = m_movementInput;
+        if(!m_grounded)
+        {
+            input = Vector2.zero;
+        }
         Vector2 mag = findVelRelativeToLook();
 
         //counterMovement(m_movementInput, mag);
 
         Vector2 movement = Vector2.Max(Vector2.Min(mag + m_movementInput, new Vector2(m_maxSpeed, m_maxSpeed)), new Vector2(-m_maxSpeed, -m_maxSpeed)) - mag;
 
-        m_rb.AddForce((transform.forward * movement.y + transform.right * movement.x) * m_moveSpeed * Time.deltaTime * m_moveMultiplier);
+        m_rb.AddForce((transform.forward * movement.y + transform.right * movement.x) * m_moveSpeed * Time.fixedDeltaTime * m_moveMultiplier, ForceMode.Acceleration);
+        if(m_rb.velocity.magnitude > m_maxSpeed)
+        {
+            m_rb.velocity = m_rb.velocity.normalized * m_maxSpeed;
+        }
+        if (!m_isMoving && m_grounded && !m_crouching)
+        {
+            m_rb.velocity *= m_deceleration_rate;
+        }
+
     }
 
     public void OnJump()
