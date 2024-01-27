@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Netcode;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Movement : MonoBehaviour
+public class Movement : NetworkBehaviour
 {
     private Vector2 m_movementInput = Vector2.zero;
     private float m_moveMultiplier = 100.0f;
@@ -17,9 +18,12 @@ public class Movement : MonoBehaviour
     private bool m_crouching = false;
     private bool m_running = false;
     private bool m_cancellingGrounded = false;
+    private bool m_mouseLocked = true;
     [HideInInspector] public bool m_wallRunning = false;
 
     private bool m_isMoving = false;
+
+    public static bool MouseLocked => !Cursor.visible && (Cursor.lockState == CursorLockMode.Locked || Cursor.lockState == CursorLockMode.Confined);
 
     private Rigidbody m_rb;
     private Vector3 m_normalVector = Vector3.up;
@@ -45,15 +49,21 @@ public class Movement : MonoBehaviour
     [SerializeField] private float m_slideForce = 40;
     [SerializeField] private float m_slideCounterMovement = 0.2f;
 
-    private void Awake()
+    private void Start()
     {
         m_rb = GetComponent<Rigidbody>();
     }
 
+    [ServerRpc(RequireOwnership = false)]
+    void MoveServerRpc(ServerRpcParams serverRpcParams = default)
+    {
+        var clientId = serverRpcParams.Receive.SenderClientId;
+        if (NetworkManager.ConnectedClients.ContainsKey(clientId))
+            Move();
+    }
+
     public void OnCrouch(InputValue value)
     {
-        Debug.Log("Crouch " + value.isPressed.ToString());
-
         m_crouching = value.isPressed;
 
         if (m_crouching)
@@ -71,20 +81,43 @@ public class Movement : MonoBehaviour
 
     public void OnRun(InputValue value)
     {
-        Debug.Log("Run " + value.isPressed.ToString());
         m_running = value.isPressed;
+    }
+
+    void Update()
+    {
+        var keyboard = Keyboard.current;
+        if (keyboard.escapeKey.isPressed && !Cursor.visible)
+            m_mouseLocked = false;
+
+        if (Mouse.current.leftButton.isPressed && Cursor.visible)
+            m_mouseLocked = true;
+
+        if (m_mouseLocked)
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
     }
 
     void FixedUpdate()
     {
+        if (!IsOwner)
+        {
+            MoveServerRpc();
+            return;
+        }
         Move();
-        
     }
 
     public void OnMove(InputValue value)
     {
         Vector2 inputValue = value.Get<Vector2>();
-        Debug.Log("Move " + inputValue.ToString());
         m_movementInput = inputValue;
         if (m_wallRunning) m_movementInput.x = 0;
         m_isMoving = inputValue.x != 0 || inputValue.y != 0;
@@ -93,7 +126,7 @@ public class Movement : MonoBehaviour
     private void Move()
     {
         Vector2 input = m_movementInput;
-        if(!m_grounded)
+        if (!m_grounded)
         {
             input = Vector2.zero;
         }
@@ -124,6 +157,7 @@ public class Movement : MonoBehaviour
 
         m_rb.AddForce((Vector3.up * 1.5f + m_normalVector * 0.5f) * m_jumpForce);
     }
+
     private void counterMovement(Vector2 movementInput, Vector2 mag)
     {
         //Slow down sliding
@@ -163,6 +197,7 @@ public class Movement : MonoBehaviour
     /// </summary>
     private void OnCollisionStay(Collision other)
     {
+
         //Make sure we are only checking for walkable layers
         int layer = other.gameObject.layer;
         if (m_whatIsGround != (m_whatIsGround | (1 << layer))) return;
