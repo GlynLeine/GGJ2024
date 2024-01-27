@@ -3,17 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Weapon : MonoBehaviour
+public abstract class Weapon : MonoBehaviour
 {
-    public void OnFire(InputAction.CallbackContext context)
+    public void OnFire()
     {
-        if (!context.performed) return;
         Attack();
     }
 
-    public virtual void Attack()
-    {
-
-    }
-
+    public abstract void Attack();
 }

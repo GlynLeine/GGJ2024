@@ -10,24 +10,20 @@ public class GrenadeLauncher : Weapon_Ranged
 
     [SerializeField] private Grenade grenadePrefab;
     [SerializeField] private float grenadeForce;
+    [SerializeField] private Voxelizer voxelizer;
 
     [SerializeField] private float coolDown = 0.5f;
     private float timer = 0.0f;
     private bool onCoolDown = false;
-    [SerializeField,Tooltip("Maximum amount of bounces in grenade")] private int maxBounces;
-    private int amountOfBounce = 0;
-
-    private void Start()
-    {
-        if(input == null) throw new ArgumentNullException("input is null. Please fill it within the inspector");
-    }
+    [SerializeField, Tooltip("Maximum amount of bounces in grenade")] private int maxBounces;
+    [HideInInspector] public int amountOfBounces { get; private set; }
 
     private void Update()
     {
-        if(onCoolDown)
+        if (onCoolDown)
         {
             timer += Time.deltaTime;
-            if(timer >= coolDown)
+            if (timer >= coolDown)
             {
                 timer = 0.0f;
                 onCoolDown = false;
@@ -35,19 +31,21 @@ public class GrenadeLauncher : Weapon_Ranged
         }
     }
 
-    public void OnAlterBounce(InputAction.CallbackContext context)
+    public void OnAlterBounce(InputValue value)
     {
-      
-        float value = context.ReadValue<float>();
-        amountOfBounce = Math.Clamp(amountOfBounce + (value > 0 ? 1 : value < 0 ? -1 : 0), 0, maxBounces);
-        Debug.Log("Amount of bounces: " + amountOfBounce);
+        float axis = value.Get<float>();
+        amountOfBounces = Math.Clamp(amountOfBounces + (axis > 0 ? 1 : axis < 0 ? -1 : 0), 0, maxBounces);
+        Debug.Log("Amount of bounces: " + amountOfBounces + " input: " + axis);
     }
+
     public override void Attack()
     {
-        if (onCoolDown) return;
+        if (onCoolDown || currentAmmo <= 0 || isReloading) return;
 
-       Grenade grenade = Instantiate(grenadePrefab, transform.position + transform.forward, Quaternion.identity);
-       grenade.Initialize(amountOfBounce,transform.forward,grenadeForce);
+        currentAmmo--;
+
+        Grenade grenade = Instantiate(grenadePrefab, transform.position + transform.forward, Quaternion.identity);
+        grenade.Initialize(amountOfBounces, transform.forward, grenadeForce, voxelizer);
         onCoolDown = true;
     }
 

@@ -7,10 +7,12 @@ public class Grenade : MonoBehaviour
 {
     [SerializeField] private float lifeSpan = 3;
     private int bounces = 0;
+    private Voxelizer voxelizer;
     
-    public void Initialize(int bounces, Vector3 direction, float force)
+    public void Initialize(int bounces, Vector3 direction, float force, Voxelizer v)
     {
         this.bounces = bounces;
+        voxelizer = v;
         Rigidbody rb = GetComponent<Rigidbody>();
         rb.AddForce(direction *  force, ForceMode.Impulse);
     }
@@ -35,6 +37,7 @@ public class Grenade : MonoBehaviour
     private void Explode()
     {
         Debug.Log("KABOOM");
+        voxelizer.CreateSmoke(transform.position);
         Destroy(gameObject);
     }
 }

@@ -20,14 +20,14 @@
                     "id": "a1f18f8d-1ab4-4500-884b-6c3c0669c28f",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "",
+                    "interactions": "Press",
                     "initialStateCheck": false
                 },
                 {
                     "name": "AlterBounce",
                     "type": "Value",
                     "id": "772325b9-3c29-4ae9-bcdb-bd033c2a6e86",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -118,7 +118,7 @@
                     "name": "MouseScroll",
                     "id": "77d8d0c1-6527-4838-9cb8-6d23480503d7",
                     "path": "1DAxis",
-                    "interactions": "Tap(duration=0.1)",
+                    "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "AlterBounce",
