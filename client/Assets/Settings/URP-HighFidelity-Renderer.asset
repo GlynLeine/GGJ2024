@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9847bc60e80e0847b603000486b7134, type: 3}
   m_Name: RayMarchedSmokeFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
   settings:
     resolutionScale: 2
     seed: 0
@@ -159,11 +159,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d613f08f173d4dd895bb07b3230baa9, type: 3}
   m_Name: FullScreenPassRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 0
+  m_Active: 1
   injectionPoint: 600
   fetchColorBuffer: 1
   requirements: 4
-  passMaterial: {fileID: 0}
+  passMaterial: {fileID: 2100000, guid: 07e6846564285164a99b45903717bb6e, type: 2}
   passIndex: 0
   bindDepthStencilAttachment: 0
   m_Version: 1
