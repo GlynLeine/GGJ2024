@@ -122,7 +122,7 @@ public class WallRun : MonoBehaviour
 
     void StopWallRun()
     {
-        Debug.Log("stopping wall run");
+        //Debug.Log("stopping wall run");
         gravity.UseGravity = true;
         movement.m_wallRunning = false;
         if (canFov)

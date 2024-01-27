@@ -19,6 +19,13 @@ public class GrenadeLauncher : Weapon_Ranged
     [SerializeField, Tooltip("Maximum amount of bounces in grenade")] private int maxBounces;
     [HideInInspector] public int amountOfBounces { get; private set; }
 
+    private void Start()
+    {
+        if (!IsOwner) return;
+
+        voxelizer = FindObjectOfType<Voxelizer>();
+    }
+
     private void Update()
     {
         if (onCoolDown)
@@ -42,11 +49,11 @@ public class GrenadeLauncher : Weapon_Ranged
     public override void Attack()
     {
         if (!IsOwner) return;
-  
+
         if (onCoolDown || currentAmmo <= 0 || isReloading) return;
         currentAmmo--;
-      	AttackServerRpc();
-  
+        AttackServerRpc();
+
 
         //Grenade grenade = Instantiate(grenadePrefab, transform.position + transform.forward, Quaternion.identity);
         //grenade.Initialize(amountOfBounces, transform.forward, grenadeForce, voxelizer);
@@ -59,6 +66,8 @@ public class GrenadeLauncher : Weapon_Ranged
         m_grenade = Instantiate(grenadePrefab, transform.root.position + (Vector3.up * 2) + transform.root.forward, Quaternion.identity);
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
+        m_grenade.voxelizer = voxelizer;
+        m_grenade.GetComponent<Rigidbody>().AddForce(transform.root.forward * grenadeForce);
         m_grenade.GetComponent<NetworkObject>().Spawn();
     }
 
