@@ -46,10 +46,10 @@ public class GrenadeLauncher : Weapon_Ranged
         Debug.Log("Amount of bounces: " + amountOfBounces + " input: " + axis);
     }
 
-    public override void Attack()
+    public override void Attack(bool isPressed)
     {
-        if (!IsOwner) return;
-
+        if (!IsOwner || !isPressed) return;
+  
         if (onCoolDown || currentAmmo <= 0 || isReloading) return;
         currentAmmo--;
         AttackServerRpc();
@@ -67,7 +67,9 @@ public class GrenadeLauncher : Weapon_Ranged
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
         m_grenade.voxelizer = voxelizer;
-        m_grenade.GetComponent<Rigidbody>().AddForce(transform.root.forward * grenadeForce);
+        Debug.Log("Fire");
+        m_grenade.GetComponent<Rigidbody>().isKinematic = false;
+        m_grenade.GetComponent<Rigidbody>().AddForce(transform.forward * grenadeForce,ForceMode.Impulse);
         m_grenade.GetComponent<NetworkObject>().Spawn();
     }
 
