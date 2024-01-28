@@ -771,7 +771,7 @@ MonoBehaviour:
   effectsWhenHeadExplodes:
   - {fileID: 5347661946112949169}
   maxHealth: 100
-  health: -900
+  health: 0
   timeUntilRegeneration: 1
   secondsBetweenRegenTicks: 0.2
   regenerationRate: 1

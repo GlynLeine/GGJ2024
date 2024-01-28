@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class GasTriggerSphere : MonoBehaviour
 {
-    private Health ownerHealth;
-    private Health targetHealth;
+    private List<Health> targetHealth = new List<Health>();
 
     [SerializeField] private float timeBetweenDamageTicks = .3f;
     float damageTimer;
@@ -33,33 +32,32 @@ public class GasTriggerSphere : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if (targetHealth != null) return;
+        
         if( other.GetComponent<Health>() is Health health){
-            if(health.isBeingDamaged || (ownerHealth != null && health ==  ownerHealth)) { 
+            if(health.isBeingDamaged) { 
                 return;
             }
-            targetHealth = health;
+            if(!targetHealth.Contains(health))
+            targetHealth.Add(health);
         }
     }
 
     private void OnTriggerStay(Collider other)
     {
-        if (targetHealth != null)
-        {
             damageTimer += Time.deltaTime;
             if(damageTimer >= timeBetweenDamageTicks)
             {
+
                 damageTimer = 0;
-                targetHealth.DamageHealth(damagePerTick);
+                targetHealth.ForEach(h => h.DamageHealth(damagePerTick));
             }
-        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.GetComponent<Health>() != null && other.GetComponent<Health>() == targetHealth)
+        if (other.GetComponent<Health>() != null &&  targetHealth.Contains(other.GetComponent<Health>()))
         {
-            targetHealth = null;
+            targetHealth.Remove(other.GetComponent<Health>());
         }
     }
 

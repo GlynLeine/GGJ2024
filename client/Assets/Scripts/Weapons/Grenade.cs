@@ -44,7 +44,7 @@ public class Grenade : MonoBehaviour
     {
         voxelizer.CreateSmoke(transform.position);
         source.Play();
-        Instantiate(gassObject, transform.position, Quaternion.identity).Initialize(voxelizer.smokeDuration, Vector3.up, 0.0f, voxelizer.boundsExtent.y * 2.0f);
+        Instantiate(gassObject, transform.position, Quaternion.identity).Initialize(voxelizer.smokeDuration, Vector3.up, 0.0f, voxelizer.maxRadius.y * 2.0f);
         Destroy(transform.GetChild(0).gameObject);
         m_exploded = true;
     }
