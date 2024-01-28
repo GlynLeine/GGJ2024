@@ -4,6 +4,25 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Audio;
+
+public static class AudioSourceExtension
+{
+    public static bool IsReversePitch(this AudioSource source)
+    {
+        return source.pitch < 0f;
+    }
+
+    public static float GetClipRemainingTime(this AudioSource source)
+    {
+        // Calculate the remainingTime of the given AudioSource,
+        // if we keep playing with the same pitch.
+        float remainingTime = (source.clip.length - source.time) / source.pitch;
+        return source.IsReversePitch() ?
+            (source.clip.length + remainingTime) :
+            remainingTime;
+    }
+}
 
 public class GrenadeLauncher : Weapon_Ranged
 {
@@ -54,14 +73,23 @@ public class GrenadeLauncher : Weapon_Ranged
 
         if (onCoolDown || currentAmmo <= 0 || isReloading) return;
         currentAmmo--;
+        if (!grenadeShootAudioSource.isPlaying)
+        {
+            grenadeShootAudioSource.Play();
+            StartCoroutine(WaitTillClipEnd(grenadeShootAudioSource, .6f));
+        }
+        onCoolDown = true;
+    }
+
+    private IEnumerator WaitTillClipEnd(AudioSource source, float modifier)
+    {
+        var waitForClipRemainingTime = new WaitForSeconds(source.GetClipRemainingTime() * modifier);
+        yield return waitForClipRemainingTime;
         m_grenade = Instantiate(grenadePrefab, transform.position + transform.up + transform.forward, Quaternion.LookRotation(transform.forward, m_camera.transform.up));
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
         m_grenade.voxelizer = voxelizer;
         m_grenade.GetComponent<Rigidbody>().isKinematic = false;
         m_grenade.GetComponent<Rigidbody>().AddForce(m_camera.transform.forward * grenadeForce, ForceMode.Impulse);
-        if (!grenadeShootAudioSource.isPlaying)
-            grenadeShootAudioSource.Play();
-        onCoolDown = true;
     }
 }

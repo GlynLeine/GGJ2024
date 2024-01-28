@@ -10,13 +10,23 @@ public class Grenade : MonoBehaviour
     [SerializeField] private float lifeSpan = 3;
     [HideInInspector] public int bounces = 0;
     [HideInInspector] public Voxelizer voxelizer;
+    [SerializeField] private AudioSource source;
+
+    private bool m_exploded = false;
 
     private void Update()
     {
-        //if (!IsOwner) return;
+        if(m_exploded)
+        {
+            if(!source.isPlaying)
+            {
+                Destroy(gameObject);
+            }
+            return;
+        }
 
         lifeSpan -= Time.deltaTime;
-        if (lifeSpan <= 0)
+        if (lifeSpan <= 0 && !m_exploded)
         {
             explode();
         }
@@ -24,30 +34,16 @@ public class Grenade : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        //if (!IsOwner) return;
-
         bounces -= 1;
-        if (bounces < 0)
+        if (bounces < 0 && !m_exploded)
             explode();
     }
 
     private void explode()
     {
-        //Debug.Log("KABOOM");
-        //if (IsOwner)
-        //    FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
-        //else
-        //    instantiateSmokeServerRpc();
-
-        //parent.DestroyServerRpc();
         voxelizer.CreateSmoke(transform.position);
-        Destroy(gameObject);
+        source.Play();
+        Destroy(transform.GetChild(0).gameObject);
+        m_exploded = true;
     }
-
-
-    //[ServerRpc(RequireOwnership = false)]
-    //private void instantiateSmokeServerRpc()
-    //{
-    //    FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
-    //}
 }

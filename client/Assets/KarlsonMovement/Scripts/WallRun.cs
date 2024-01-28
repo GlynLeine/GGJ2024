@@ -107,13 +107,13 @@ public class WallRun : MonoBehaviour
     {
         if (wallLeft)
         {
-            Vector3 wallRunJumpDirection = transform.up * .5f + leftWallHit.normal * 1.5f;
+            Vector3 wallRunJumpDirection = transform.up * .75f + leftWallHit.normal * 1.5f;
             rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             rb.AddForce(wallRunJumpDirection * wallRunJumpForce, ForceMode.Impulse);
         }
         else if (wallRight)
         {
-            Vector3 wallRunJumpDirection = transform.up * .5f + rightWallHit.normal * 1.5f;
+            Vector3 wallRunJumpDirection = transform.up * .75f + rightWallHit.normal * 1.5f;
             rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             rb.AddForce(wallRunJumpDirection * wallRunJumpForce , ForceMode.Impulse);
         }

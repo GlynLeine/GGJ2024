@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1034768832242001800}
   - component: {fileID: 3093347714439641065}
   - component: {fileID: 4047478424461916047}
-  - component: {fileID: 3037396830154184333}
   - component: {fileID: 3434567151394931469}
+  - component: {fileID: 1185963841017418120}
   m_Layer: 0
   m_Name: Grenade
   m_TagString: Untagged
@@ -131,29 +131,7 @@ MonoBehaviour:
   lifeSpan: 1.5
   bounces: 0
   voxelizer: {fileID: 0}
---- !u!136 &3037396830154184333
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3681392319113281552}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.25
-  m_Height: 1.2
-  m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  source: {fileID: 3434567151394931469}
 --- !u!82 &3434567151394931469
 AudioSource:
   m_ObjectHideFlags: 0
@@ -164,9 +142,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 3c16caab4ab495141a67d99bbdfaf53c, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -250,6 +228,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!135 &1185963841017418120
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3681392319113281552}
+  m_Material: {fileID: 13400000, guid: e65681713552f4b469d75e0acd84090c, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.5
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &7309938916422973475
 PrefabInstance:
   m_ObjectHideFlags: 0
