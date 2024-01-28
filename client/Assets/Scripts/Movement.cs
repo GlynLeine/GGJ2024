@@ -7,6 +7,8 @@ using Unity.Netcode;
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour
 {
+    [SerializeField] private AudioSource footAudioSource;
+
     private Vector2 m_movementInput = Vector2.zero;
     private float m_moveMultiplier = 100.0f;
     private float m_counterMovement = 0.175f;
@@ -54,14 +56,6 @@ public class Movement : MonoBehaviour
         m_rb = GetComponent<Rigidbody>();
     }
 
-    //[ServerRpc(RequireOwnership = false)]
-    //void MoveServerRpc(ServerRpcParams serverRpcParams = default)
-    //{
-    //    var clientId = serverRpcParams.Receive.SenderClientId;
-    //    if (NetworkManager.ConnectedClients.ContainsKey(clientId))
-    //        Move();
-    //}
-
     public void OnCrouch(InputValue value)
     {
         m_crouching = value.isPressed;
@@ -107,11 +101,6 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
-        //if (!IsOwner)
-        //{
-        //    MoveServerRpc();
-        //    return;
-        //}
         Move();
     }
 
@@ -145,6 +134,9 @@ public class Movement : MonoBehaviour
         {
             m_rb.velocity *= m_deceleration_rate;
         }
+
+        if(m_grounded && m_rb.velocity.magnitude > 0)
+            footAudioSource.Play();
 
     }
 
@@ -197,7 +189,6 @@ public class Movement : MonoBehaviour
     /// </summary>
     private void OnCollisionStay(Collision other)
     {
-
         //Make sure we are only checking for walkable layers
         int layer = other.gameObject.layer;
         if (m_whatIsGround != (m_whatIsGround | (1 << layer))) return;

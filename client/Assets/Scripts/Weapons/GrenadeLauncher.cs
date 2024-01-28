@@ -7,12 +7,14 @@ using UnityEngine.InputSystem;
 
 public class GrenadeLauncher : Weapon_Ranged
 {
+    [SerializeField] private AudioSource grenadeShootAudioSource;
     [SerializeField] private Grenade grenadePrefab;
     [SerializeField] private float grenadeForce;
     [SerializeField] private Voxelizer voxelizer;
 
     [SerializeField] private float coolDown = 0.5f;
     private Grenade m_grenade;
+    private Camera m_camera;
 
     private float timer = 0.0f;
     private bool onCoolDown = false;
@@ -21,9 +23,8 @@ public class GrenadeLauncher : Weapon_Ranged
 
     private void Start()
     {
-        //if (!IsOwner) return;
-
         voxelizer = FindObjectOfType<Voxelizer>();
+        m_camera = Camera.main;
     }
 
     private void Update()
@@ -48,38 +49,18 @@ public class GrenadeLauncher : Weapon_Ranged
 
     public override void Attack(bool isPressed)
     {
-        //if (!IsOwner) return;
-
         if (!isPressed) return;
 
         if (onCoolDown || currentAmmo <= 0 || isReloading) return;
         currentAmmo--;
-        m_grenade = Instantiate(grenadePrefab, transform.position + transform.up + transform.forward, Quaternion.identity);
+        m_grenade = Instantiate(grenadePrefab, transform.position + transform.up + transform.forward, Quaternion.LookRotation(transform.forward, m_camera.transform.up));
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
         m_grenade.voxelizer = voxelizer;
         m_grenade.GetComponent<Rigidbody>().isKinematic = false;
-        m_grenade.GetComponent<Rigidbody>().AddForce(transform.GetComponentInChildren<Camera>().transform.forward * grenadeForce, ForceMode.Impulse);
-        //AttackServerRpc();
+        m_grenade.GetComponent<Rigidbody>().AddForce(m_camera.transform.forward * grenadeForce, ForceMode.Impulse);
+        if (!grenadeShootAudioSource.isPlaying)
+            grenadeShootAudioSource.Play();
         onCoolDown = true;
     }
-
-    //[ServerRpc]//this spanws the grenade, not attacking the server
-    //private void AttackServerRpc()
-    //{
-    //    m_grenade = Instantiate(grenadePrefab, transform.position + transform.up + transform.forward, Quaternion.identity);
-    //    m_grenade.bounces = amountOfBounces;
-    //    m_grenade.parent = this;
-    //    m_grenade.voxelizer = voxelizer;
-    //    m_grenade.GetComponent<Rigidbody>().isKinematic = false;
-    //    m_grenade.GetComponent<Rigidbody>().AddForce(transform.GetComponentInChildren<Camera>().transform.forward * grenadeForce, ForceMode.Impulse);
-    //    m_grenade.GetComponent<NetworkObject>().Spawn();
-    //}
-
-    //[ServerRpc(RequireOwnership = false)]//Destroys the grenade, not the server
-    //public void DestroyServerRpc()
-    //{
-    //    m_grenade.GetComponent<NetworkObject>().Despawn();
-    //    Destroy(m_grenade.gameObject);
-    //}
 }
