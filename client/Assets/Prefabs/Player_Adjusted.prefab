@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAmmo: 5
-  reloadTime: 0
+  reloadTime: 1.2
   currentAmmo: 0
   grenadePrefab: {fileID: 4047478424461916047, guid: 0f5c575ee75465347993d466a580ba8f,
     type: 3}
