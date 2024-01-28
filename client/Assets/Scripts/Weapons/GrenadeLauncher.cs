@@ -44,6 +44,7 @@ public class GrenadeLauncher : Weapon_Ranged
     {
         float axis = value.Get<float>();
         amountOfBounces = Math.Clamp(amountOfBounces + (axis > 0 ? 1 : axis < 0 ? -1 : 0), 0, maxBounces);
+
         Debug.Log("Amount of bounces: " + amountOfBounces + " input: " + axis);
     }
 
