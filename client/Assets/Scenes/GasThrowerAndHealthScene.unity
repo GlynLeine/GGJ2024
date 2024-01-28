@@ -294,13 +294,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
         type: 3}
-      propertyPath: maxRadius.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
-        type: 3}
-      propertyPath: maxRadius.z
-      value: 1.5
+      propertyPath: voxelSize
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
         type: 3}
@@ -311,6 +306,11 @@ PrefabInstance:
         type: 3}
       propertyPath: boundsExtent.z
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
+        type: 3}
+      propertyPath: debugSmokeVoxels
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

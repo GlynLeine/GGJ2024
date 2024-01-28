@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boundsExtent: {x: 5, y: 5, z: 5}
-  voxelSize: 0.125
+  voxelSize: 0.25
   objectsToVoxelize: {fileID: 248987410303402297}
   intersectionBias: 1
   debugMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
