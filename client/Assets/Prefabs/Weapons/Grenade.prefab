@@ -132,6 +132,8 @@ MonoBehaviour:
   bounces: 0
   voxelizer: {fileID: 0}
   source: {fileID: 3434567151394931469}
+  gassObject: {fileID: 3224613977233100583, guid: 2905a875811b4be418445097b2eaf5b2,
+    type: 3}
 --- !u!82 &3434567151394931469
 AudioSource:
   m_ObjectHideFlags: 0

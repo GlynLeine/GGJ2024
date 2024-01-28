@@ -11,6 +11,7 @@ public class Grenade : MonoBehaviour
     [HideInInspector] public int bounces = 0;
     [HideInInspector] public Voxelizer voxelizer;
     [SerializeField] private AudioSource source;
+    public GasTriggerSphere gassObject;
 
     private bool m_exploded = false;
 
@@ -43,6 +44,7 @@ public class Grenade : MonoBehaviour
     {
         voxelizer.CreateSmoke(transform.position);
         source.Play();
+        Instantiate(gassObject, transform.position, Quaternion.identity).Initialize(voxelizer.smokeDuration, Vector3.up, 0.0f, voxelizer.boundsExtent.y * 2.0f);
         Destroy(transform.GetChild(0).gameObject);
         m_exploded = true;
     }

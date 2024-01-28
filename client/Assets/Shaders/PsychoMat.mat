@@ -43,18 +43,19 @@ Material:
     m_Ints: []
     m_Floats:
     - _Brightness: 1.1
-    - _ChromaticAbberation: 0
-    - _ChromaticAbberationFresnelSize: 0
+    - _ChromaticAbberation: 0.1
+    - _ChromaticAbberationFresnelSize: 5
     - _ColourOutlineThickness: 0.01
     - _Contrast: 1
     - _DepthOutlineThickness: 0.01
     - _HueOffset: 0
-    - _MotionSicknessIntensity: 0
+    - _MotionSicknessIntensity: 1
     - _NormalOutlineThickness: 0.01
     - _OutlineSquiggliness: 0
     - _PostBrighten: 1
+    - _Psychoness: 0.0010870231
     - _SaturationScalar: 0.55
-    - _StaticIntensity: 0
-    - _StaticSpeed: 0
+    - _StaticIntensity: 5
+    - _StaticSpeed: 1
     m_Colors: []
   m_BuildTextureStacks: []
