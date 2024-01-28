@@ -53,7 +53,7 @@ Material:
     - _NormalOutlineThickness: 0.01
     - _OutlineSquiggliness: 0
     - _PostBrighten: 1
-    - _Psychoness: 0.0662334
+    - _Psychoness: 3.3617262e-10
     - _SaturationScalar: 0.55
     - _StaticIntensity: 5
     - _StaticSpeed: 1
