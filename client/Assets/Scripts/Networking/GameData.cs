@@ -23,8 +23,6 @@ public class GameData : NetworkBehaviour
     public PlayerType playerType;
 
     [SerializeField] public static List<GameObject> spawnedGrenades = new List<GameObject>();
-    //public GameObject m_playerPrefab;
-    //public GameObject m_spectatorPrefab;
 
     private void Start()
     {
