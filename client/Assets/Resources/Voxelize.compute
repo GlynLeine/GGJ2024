@@ -177,7 +177,7 @@ void CS_FillStep(uint id : SV_DISPATCHTHREADID) {
         float3 pos = voxelPos;
         float halfVoxelSize = _VoxelSize * 0.5f;
 
-        float3 centerPos = pos * _VoxelSize + halfVoxelSize - float3(_BoundsExtent.x, 0, _BoundsExtent.z) - _SmokeOrigin;
+        float3 centerPos = (pos * _VoxelSize + halfVoxelSize) - float3(_BoundsExtent.x, 0, _BoundsExtent.z) - _SmokeOrigin;
 
         // Outside radius
         if (length(centerPos / _Radius) > 1) {

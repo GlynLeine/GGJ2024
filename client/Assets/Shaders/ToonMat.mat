@@ -53,9 +53,10 @@ Material:
     - _HueOffset: 0
     - _MotionSicknessIntensity: 0
     - _NormalOutlineThickness: 0.446
-    - _OutlineSquiggliness: 0.002
+    - _OutlineSquiggliness: 0.00522
     - _PostBrighten: 3.75
     - _SaturationScalar: 0.734
+    - _SquigglinessScale: 0.5
     - _StaticIntensity: 0
     - _StaticSpeed: 0
     m_Colors: []
