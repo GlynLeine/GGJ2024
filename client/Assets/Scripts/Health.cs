@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.VFX;
 
 public class Health : MonoBehaviour
@@ -19,9 +20,10 @@ public class Health : MonoBehaviour
     private float regenTimer = 0;
     [SerializeField] private int regenerationRate = 1;
     private bool dead = false;
+    public bool Dead => dead;
     public bool isBeingDamaged { get; private set; }
 
-
+    [HideInInspector] public UnityEvent OnHeadExplodes = new UnityEvent();
     private void Update()
     {
         if (dead) return;
@@ -79,6 +81,7 @@ public class Health : MonoBehaviour
             effectsWhenHeadExplodes[i].Play();
         }
         Debug.Log("someone died");
+        OnHeadExplodes?.Invoke();
         yield break;
     }
     public void Respawn()

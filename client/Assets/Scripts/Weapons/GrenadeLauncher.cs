@@ -43,6 +43,7 @@ public class GrenadeLauncher : Weapon_Ranged
     private void Start()
     {
         m_camera = Camera.main;
+        currentAmmo = maxAmmo;
     }
 
     private void Update()
@@ -70,12 +71,13 @@ public class GrenadeLauncher : Weapon_Ranged
     {
         if (!isPressed) return;
 
-        if (onCoolDown || currentAmmo <= 0 || isReloading) return;
-        currentAmmo--;
+        if (onCoolDown || currentAmmo <= 0 || isReloading)
+            return;
+
         if (!grenadeShootAudioSource.isPlaying)
         {
             grenadeShootAudioSource.Play();
-            StartCoroutine(WaitTillClipEnd(grenadeShootAudioSource, .6f));
+            StartCoroutine(WaitTillClipEnd(grenadeShootAudioSource, .3f));
         }
         onCoolDown = true;
     }
@@ -84,6 +86,8 @@ public class GrenadeLauncher : Weapon_Ranged
     {
         var waitForClipRemainingTime = new WaitForSeconds(source.GetClipRemainingTime() * modifier);
         yield return waitForClipRemainingTime;
+
+        currentAmmo--;
         m_grenade = Instantiate(grenadePrefab, transform.position + transform.up + transform.forward, Quaternion.LookRotation(transform.forward, m_camera.transform.up));
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;

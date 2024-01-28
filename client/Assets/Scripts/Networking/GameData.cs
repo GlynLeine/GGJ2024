@@ -5,6 +5,7 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static System.Net.Mime.MediaTypeNames;
 
 struct Score
 {
@@ -106,7 +107,20 @@ public class GameData : MonoBehaviour
             if (playerScores.Count > 0)
             {
                 var pair = GetHighestScore();
-                FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{pair.name}, {pair.score}";
+
+                int minutes = Mathf.FloorToInt(pair.score / 60.0f);
+
+                string minutesText = minutes < 10 ? "0" + minutes : minutes.ToString();
+
+                int seconds = Mathf.FloorToInt(pair.score - (minutes * 60));
+
+                string secondsText = seconds < 10 ? "0" + seconds : seconds.ToString();
+
+                int microseconds = Mathf.FloorToInt((pair.score - (seconds + (minutes * 60))) * 100);
+
+                string microsecondsText = microseconds < 10 ? "0" + microseconds : microseconds.ToString();
+
+                FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{pair.name}, {minutesText + ":" + secondsText + "." + microsecondsText} minutes";
             }
         }
 
@@ -120,7 +134,18 @@ public class GameData : MonoBehaviour
 
     void OnGameEnd()
     {
-        playerScores.Add(PlayerName, timeScore.currentTime);
+        if (playerScores.ContainsKey(PlayerName))
+        {
+            if (playerScores[PlayerName] > timeScore.currentTime)
+            {
+                playerScores[PlayerName] = timeScore.currentTime;
+            }
+        }
+        else
+        {
+            playerScores.Add(PlayerName, timeScore.currentTime);
+        }
+
         WriteScoresToFile();
         SceneManager.LoadScene(mainMenuSceneName);
     }
