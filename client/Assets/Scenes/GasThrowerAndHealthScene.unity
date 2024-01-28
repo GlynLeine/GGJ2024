@@ -294,11 +294,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
         type: 3}
-      propertyPath: voxelSize
-      value: 0.25
-      objectReference: {fileID: 0}
-    - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
-        type: 3}
       propertyPath: boundsExtent.x
       value: 10
       objectReference: {fileID: 0}
@@ -306,11 +301,6 @@ PrefabInstance:
         type: 3}
       propertyPath: boundsExtent.z
       value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
-        type: 3}
-      propertyPath: debugSmokeVoxels
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -346,10 +336,15 @@ PrefabInstance:
       propertyPath: weapon
       value: 
       objectReference: {fileID: 1623723977}
+    - target: {fileID: 3001983184355894791, guid: cc6d53a28cb28f146922f7550fa5ca26,
+        type: 3}
+      propertyPath: timeScore
+      value: 
+      objectReference: {fileID: 2016579526}
     - target: {fileID: 5170877758757459013, guid: cc6d53a28cb28f146922f7550fa5ca26,
         type: 3}
       propertyPath: m_Name
-      value: GrenadeLauncher
+      value: GrenadeLauncherUI
       objectReference: {fileID: 0}
     - target: {fileID: 5471005797317472001, guid: cc6d53a28cb28f146922f7550fa5ca26,
         type: 3}
@@ -456,6 +451,16 @@ PrefabInstance:
       propertyPath: grenadeLauncher
       value: 
       objectReference: {fileID: 1623723977}
+    - target: {fileID: 7000667692346027100, guid: cc6d53a28cb28f146922f7550fa5ca26,
+        type: 3}
+      propertyPath: m_text
+      value: 00:00.00
+      objectReference: {fileID: 0}
+    - target: {fileID: 7000667692346027100, guid: cc6d53a28cb28f146922f7550fa5ca26,
+        type: 3}
+      propertyPath: m_HorizontalAlignment
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -683,6 +688,55 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2985885807105958619}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2016579525
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2016579527}
+  - component: {fileID: 2016579526}
+  m_Layer: 0
+  m_Name: Timer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2016579526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016579525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9da2f43db708a1f44b30f2fca10653b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameDuration: 90
+  currentTime: 0
+  onGameEnd:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!4 &2016579527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2016579525}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &3207743742887637
 Transform:
   m_ObjectHideFlags: 0
@@ -2195,3 +2249,4 @@ SceneRoots:
   - {fileID: 1623723976}
   - {fileID: 702359136}
   - {fileID: 273442302}
+  - {fileID: 2016579527}

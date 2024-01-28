@@ -17,9 +17,9 @@ MonoBehaviour:
     resolutionScale: 2
     seed: 0
     octaves: 6
-    cellSize: 32
+    cellSize: 29
     axisCellCount: 4
-    amplitude: 0.62
+    amplitude: 1.92
     warp: 0.76
     add: 0
     invertNoise: 1
@@ -36,14 +36,14 @@ MonoBehaviour:
     lightStepCount: 16
     lightStepSize: 0.25
     smokeSize: 4
-    volumeDensity: 4
-    absorptionCoefficient: 0.5
-    scatteringCoefficient: 2.6
+    volumeDensity: 10
+    absorptionCoefficient: 2.277
+    scatteringCoefficient: 3
     extinctionColor: {r: 1, g: 1, b: 1, a: 1}
-    shadowDensity: 2.5
-    phaseFunction: 1
+    shadowDensity: 3.02
+    phaseFunction: 2
     scatteringAnisotropy: 0
-    densityFalloff: 0.7
+    densityFalloff: 0.273
     alphaThreshold: 0
     animationDirection: {x: 0, y: -0.1, z: 0}
     bicubicUpscale: 0
