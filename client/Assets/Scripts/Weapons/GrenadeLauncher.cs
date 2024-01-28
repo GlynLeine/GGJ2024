@@ -42,7 +42,6 @@ public class GrenadeLauncher : Weapon_Ranged
 
     private void Start()
     {
-        voxelizer = FindObjectOfType<Voxelizer>();
         m_camera = Camera.main;
     }
 

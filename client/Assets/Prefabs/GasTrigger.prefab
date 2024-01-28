@@ -67,4 +67,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeBetweenDamageTicks: 0.2
-  damagePerTick: 10
+  damagePerTick: 20
