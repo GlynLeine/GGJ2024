@@ -54,6 +54,7 @@ public class Movement : MonoBehaviour
     private void Start()
     {
         m_rb = GetComponent<Rigidbody>();
+        m_mouseLocked = true;
     }
 
     public void OnCrouch(InputValue value)
@@ -98,7 +99,10 @@ public class Movement : MonoBehaviour
             Cursor.visible = true;
         }
     }
-
+    public void UnlockMouse()
+    {
+        m_mouseLocked = false;
+    }
     void FixedUpdate()
     {
         Move();
