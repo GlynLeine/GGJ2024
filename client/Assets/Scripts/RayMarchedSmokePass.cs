@@ -171,15 +171,18 @@ public class RayMarchedSmokePass : ScriptableRenderPass
 
         smokeAlbedoFullDescriptor = new RenderTextureDescriptor(width, height, RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeAlbedoFullDescriptor.enableRandomWrite = true;
-        smokeAlbedoFullTex = RTHandles.Alloc(smokeAlbedoFullDescriptor);
+        if (smokeAlbedoFullDescriptor.width > 0 && smokeAlbedoFullDescriptor.height > 0)
+            smokeAlbedoFullTex = RTHandles.Alloc(smokeAlbedoFullDescriptor);
 
         smokeAlbedoHalfDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(width / 2), Mathf.CeilToInt(height / 2), RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeAlbedoHalfDescriptor.enableRandomWrite = true;
-        smokeAlbedoHalfTex = RTHandles.Alloc(smokeAlbedoHalfDescriptor);
+        if (smokeAlbedoHalfDescriptor.width > 0 && smokeAlbedoHalfDescriptor.height > 0)
+            smokeAlbedoHalfTex = RTHandles.Alloc(smokeAlbedoHalfDescriptor);
 
         smokeAlbedoQuarterDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(width / 4), Mathf.CeilToInt(height / 4), RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeAlbedoQuarterDescriptor.enableRandomWrite = true;
-        smokeAlbedoQuarterTex = RTHandles.Alloc(smokeAlbedoQuarterDescriptor);
+        if (smokeAlbedoQuarterDescriptor.width > 0 && smokeAlbedoQuarterDescriptor.height > 0)
+            smokeAlbedoQuarterTex = RTHandles.Alloc(smokeAlbedoQuarterDescriptor);
 
 
         smokeMaskFullDescriptor = new RenderTextureDescriptor(width, height, RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
@@ -214,6 +217,7 @@ public class RayMarchedSmokePass : ScriptableRenderPass
         var voxelizer = GameObject.FindAnyObjectByType<Voxelizer>();
         if (voxelizer != null)
         {
+
             smokeVoxelBuffer = voxelizer.GetSmokeVoxelBuffer();
             if (smokeVoxelBuffer == null)
                 return false;
@@ -224,6 +228,8 @@ public class RayMarchedSmokePass : ScriptableRenderPass
             raymarchCompute.SetVector("_Radius", voxelizer.GetSmokeRadius());
             raymarchCompute.SetVector("_SmokeOrigin", voxelizer.GetSmokeOrigin());
         }
+        //else
+        //    Debug.LogError("Voxelizer is null in the scene");
 
         if(compositeMaterial == null)
             compositeMaterial = new Material(Shader.Find("Hidden/CompositeEffects"));
@@ -321,11 +327,11 @@ public class RayMarchedSmokePass : ScriptableRenderPass
                 Blit(cmd, smokeMaskHalfTex, smokeMaskFullTex);
                 Blit(cmd, smokeMaskFullTex, smokeMaskHalfTex);
 
-                if (settings.bicubicUpscale)
+                if (settings.bicubicUpscale/* && smokeAlbedoHalfTex != null && smokeAlbedoFullTex != null*/)
                 {
                     Blit(cmd, smokeAlbedoHalfTex, smokeAlbedoFullTex, compositeMaterial, 1);
                 }
-                else
+                else /*if (smokeAlbedoHalfTex != null && smokeAlbedoFullTex != null)*/
                 {
                     Blit(cmd, smokeAlbedoHalfTex, smokeAlbedoFullTex);
                 }
@@ -351,11 +357,15 @@ public class RayMarchedSmokePass : ScriptableRenderPass
             }
 
             // Composite volumes with source buffer
-            compositeMaterial.SetTexture("_SmokeTex", smokeAlbedoFullTex);
-            compositeMaterial.SetTexture("_SmokeMaskTex", smokeMaskTex);
-            compositeMaterial.SetTexture("_DepthTex", depthTex);
-            compositeMaterial.SetFloat("_Sharpness", settings.sharpness);
-            compositeMaterial.SetFloat("_DebugView", (int)settings.debugView);
+            if (compositeMaterial != null)
+            {
+                if (smokeAlbedoFullTex != null)
+                    compositeMaterial.SetTexture("_SmokeTex", smokeAlbedoFullTex);
+                compositeMaterial.SetTexture("_SmokeMaskTex", smokeMaskTex);
+                compositeMaterial.SetTexture("_DepthTex", depthTex);
+                compositeMaterial.SetFloat("_Sharpness", settings.sharpness);
+                compositeMaterial.SetFloat("_DebugView", (int)settings.debugView);
+            }
 
             Blit(cmd, colorTex, cameraColorHandle, compositeMaterial, 2);
         }

@@ -88,7 +88,7 @@ public class WallRun : MonoBehaviour
 
     void StartWallRun()
     {
-        Debug.Log("Starting wall run");
+        //Debug.Log("Starting wall run");
         gravity.UseGravity = false;
         movement.m_wallRunning = true;
         rb.AddForce(Vector3.down * wallRunGravity, ForceMode.Force);

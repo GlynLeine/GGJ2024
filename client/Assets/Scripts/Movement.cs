@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 using Unity.Netcode;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Movement : NetworkBehaviour
+public class Movement : MonoBehaviour
 {
     private Vector2 m_movementInput = Vector2.zero;
     private float m_moveMultiplier = 100.0f;
@@ -54,13 +54,13 @@ public class Movement : NetworkBehaviour
         m_rb = GetComponent<Rigidbody>();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void MoveServerRpc(ServerRpcParams serverRpcParams = default)
-    {
-        var clientId = serverRpcParams.Receive.SenderClientId;
-        if (NetworkManager.ConnectedClients.ContainsKey(clientId))
-            Move();
-    }
+    //[ServerRpc(RequireOwnership = false)]
+    //void MoveServerRpc(ServerRpcParams serverRpcParams = default)
+    //{
+    //    var clientId = serverRpcParams.Receive.SenderClientId;
+    //    if (NetworkManager.ConnectedClients.ContainsKey(clientId))
+    //        Move();
+    //}
 
     public void OnCrouch(InputValue value)
     {
@@ -107,11 +107,11 @@ public class Movement : NetworkBehaviour
 
     void FixedUpdate()
     {
-        if (!IsOwner)
-        {
-            MoveServerRpc();
-            return;
-        }
+        //if (!IsOwner)
+        //{
+        //    MoveServerRpc();
+        //    return;
+        //}
         Move();
     }
 
