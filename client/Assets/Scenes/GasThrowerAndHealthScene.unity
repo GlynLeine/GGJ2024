@@ -184,7 +184,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 2c0492420b226174caf5fad2a846875d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -222,12 +222,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 261254244}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -3.8}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1526990374}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &273442302
 PrefabInstance:
@@ -294,6 +294,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
         type: 3}
+      propertyPath: maxRadius.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
+        type: 3}
+      propertyPath: maxRadius.z
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7404254673563593975, guid: ce9b21b3eaa92ff41a7822b64d41230e,
+        type: 3}
       propertyPath: boundsExtent.x
       value: 10
       objectReference: {fileID: 0}
@@ -304,7 +314,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 8039076325615910722, guid: ce9b21b3eaa92ff41a7822b64d41230e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 261254248}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce9b21b3eaa92ff41a7822b64d41230e, type: 3}
 --- !u!114 &273442303 stripped
@@ -565,6 +579,12 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!4 &1526990374 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8039076325615910722, guid: ce9b21b3eaa92ff41a7822b64d41230e,
+    type: 3}
+  m_PrefabInstance: {fileID: 273442302}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1623723976
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2171,7 +2191,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 1086152871}
-  - {fileID: 261254248}
   - {fileID: 7742124500810596868}
   - {fileID: 1623723976}
   - {fileID: 702359136}

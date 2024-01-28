@@ -406,7 +406,7 @@ MonoBehaviour:
   debugStaticVoxels: 0
   debugSmokeVoxels: 0
   debugEdgeVoxels: 0
-  maxRadius: {x: 1, y: 1, z: 1}
+  maxRadius: {x: 2, y: 2, z: 2}
   growthSpeed: 2
   maxFillSteps: 16
   iterateFill: 0
@@ -529,7 +529,7 @@ GameObject:
   - component: {fileID: 8635438051121496437}
   - component: {fileID: 1321278757819141489}
   - component: {fileID: 8062677471097925713}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
