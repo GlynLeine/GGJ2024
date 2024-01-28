@@ -135,9 +135,8 @@ public class Movement : MonoBehaviour
             m_rb.velocity *= m_deceleration_rate;
         }
 
-        if(m_grounded && m_rb.velocity.magnitude > 0)
+        if(footAudioSource != null && m_grounded && m_rb.velocity.magnitude > 0)
             footAudioSource.Play();
-
     }
 
     public void OnJump()
