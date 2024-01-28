@@ -24,6 +24,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _CrossHatchingTexture:
+        m_Texture: {fileID: 2800000, guid: 209a08fa7fd44b14d8f2309f5897c436, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -38,13 +42,16 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _ChromaticAbberation: 0.0683
+    - _ChromaticAbberation: 0.1
     - _ChromaticAbberationFresnelSize: 5
-    - _ColourOutlineThickness: 0.038
+    - _ColourOutlineThickness: 0.765
+    - _DepthOutlineThickness: 0.01
     - _Float: 0.35
     - _Float_1: -0.06
     - _MotionSicknessIntensity: 1
-    - _NormalOutlineThickness: 0.031
+    - _NormalOutlineThickness: 0.446
+    - _OutlineSquiggliness: 0.002
+    - _SaturationScalar: 0.39
     - _StaticIntensity: 5
     - _StaticSpeed: 1
     m_Colors: []

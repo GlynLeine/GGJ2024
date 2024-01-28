@@ -166,37 +166,40 @@ public class RayMarchedSmokePass : ScriptableRenderPass
 
         InitializeNoise();
 
-        smokeAlbedoFullDescriptor = new RenderTextureDescriptor(Screen.width, Screen.height, RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        int width = Mathf.Max(4, Screen.width);
+        int height = Mathf.Max(4, Screen.height);
+
+        smokeAlbedoFullDescriptor = new RenderTextureDescriptor(width, height, RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeAlbedoFullDescriptor.enableRandomWrite = true;
         smokeAlbedoFullTex = RTHandles.Alloc(smokeAlbedoFullDescriptor);
 
-        smokeAlbedoHalfDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(Screen.width / 2), Mathf.CeilToInt(Screen.height / 2), RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        smokeAlbedoHalfDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(width / 2), Mathf.CeilToInt(height / 2), RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeAlbedoHalfDescriptor.enableRandomWrite = true;
         smokeAlbedoHalfTex = RTHandles.Alloc(smokeAlbedoHalfDescriptor);
 
-        smokeAlbedoQuarterDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(Screen.width / 4), Mathf.CeilToInt(Screen.height / 4), RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        smokeAlbedoQuarterDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(width / 4), Mathf.CeilToInt(height / 4), RenderTextureFormat.ARGB64, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeAlbedoQuarterDescriptor.enableRandomWrite = true;
         smokeAlbedoQuarterTex = RTHandles.Alloc(smokeAlbedoQuarterDescriptor);
 
 
-        smokeMaskFullDescriptor = new RenderTextureDescriptor(Screen.width, Screen.height, RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        smokeMaskFullDescriptor = new RenderTextureDescriptor(width, height, RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeMaskFullDescriptor.enableRandomWrite = true;
         smokeMaskFullTex = RTHandles.Alloc(smokeMaskFullDescriptor);
 
-        smokeMaskHalfDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(Screen.width / 2), Mathf.CeilToInt(Screen.height / 2), RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        smokeMaskHalfDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(width / 2), Mathf.CeilToInt(height / 2), RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeMaskHalfDescriptor.enableRandomWrite = true;
         smokeMaskHalfTex = RTHandles.Alloc(smokeMaskHalfDescriptor);
 
-        smokeMaskQuarterDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(Screen.width / 4), Mathf.CeilToInt(Screen.height / 4), RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        smokeMaskQuarterDescriptor = new RenderTextureDescriptor(Mathf.CeilToInt(width / 4), Mathf.CeilToInt(height / 4), RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         smokeMaskQuarterDescriptor.enableRandomWrite = true;
         smokeMaskQuarterTex = RTHandles.Alloc(smokeMaskQuarterDescriptor);
 
 
-        depthDescriptor = new RenderTextureDescriptor(Screen.width, Screen.height, RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        depthDescriptor = new RenderTextureDescriptor(width, height, RenderTextureFormat.RFloat, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         depthDescriptor.enableRandomWrite = true;
         depthTex = RTHandles.Alloc(depthDescriptor);
 
-        colorDescriptor = new RenderTextureDescriptor(Screen.width, Screen.height, RenderTextureFormat.RGB111110Float, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
+        colorDescriptor = new RenderTextureDescriptor(width, height, RenderTextureFormat.RGB111110Float, 0, Texture.GenerateAllMips, RenderTextureReadWrite.Linear);
         colorDescriptor.enableRandomWrite = true;
         colorTex = RTHandles.Alloc(colorDescriptor);
     }
@@ -221,6 +224,9 @@ public class RayMarchedSmokePass : ScriptableRenderPass
             raymarchCompute.SetVector("_Radius", voxelizer.GetSmokeRadius());
             raymarchCompute.SetVector("_SmokeOrigin", voxelizer.GetSmokeOrigin());
         }
+
+        if(compositeMaterial == null)
+            compositeMaterial = new Material(Shader.Find("Hidden/CompositeEffects"));
 
         return true;
     }
