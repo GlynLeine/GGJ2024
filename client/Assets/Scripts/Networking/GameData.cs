@@ -51,18 +51,18 @@ public class GameData : MonoBehaviour
     public static (string name, float score) GetHighestScore()
     {
         LoadScoresFromFile();
-        float MaxScore = 0;
+        float BestScore = Mathf.Infinity;
         string topPlayer = "";
         foreach (var pair in playerScores)
         {
-            if (pair.Value > MaxScore)
+            if (pair.Value < BestScore)
             {
-                MaxScore = pair.Value;
+                BestScore = pair.Value;
                 topPlayer = pair.Key;
             }
         }
 
-        return (topPlayer, MaxScore);
+        return (topPlayer, BestScore);
     }
 
     public static void LoadScoresFromFile()
@@ -103,7 +103,7 @@ public class GameData : MonoBehaviour
         if (scene.name.Equals(mainMenuSceneName) && playerScores.Count > 0)
         {
             var pair = GetHighestScore();
-            FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{pair.name}: {pair.score}";
+            FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{pair.name}, {pair.score}";
         }
 
         if (scene.name.Equals(gameSceneName))
@@ -118,5 +118,6 @@ public class GameData : MonoBehaviour
     {
         playerScores.Add(PlayerName, timeScore.currentTime);
         WriteScoresToFile();
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 }
