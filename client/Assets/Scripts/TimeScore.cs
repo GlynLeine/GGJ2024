@@ -7,6 +7,7 @@ using UnityEngine.Events;
 public class TimeScore : MonoBehaviour
 {
     public float gameDuration = 90;
+    public Material psychoEffects;
 
     [HideInInspector]
     [SerializeField]
@@ -23,6 +24,10 @@ public class TimeScore : MonoBehaviour
         {
             onGameEnd?.Invoke();
         }
+
+        float psychoness = Mathf.Clamp01(currentTime / gameDuration);
+
+        psychoEffects.SetFloat("_Psychoness", Mathf.Pow(psychoness, 5.0f));
     }
 
 

@@ -22,7 +22,7 @@ public class TimeUI : MonoBehaviour
 
         string secondsText = seconds < 10 ? "0" + seconds : seconds.ToString();
 
-        int microseconds = Mathf.FloorToInt((timeScore.currentTime - seconds) * 100);
+        int microseconds = Mathf.FloorToInt((timeScore.currentTime - (seconds + (minutes * 60))) * 100);
 
         string microsecondsText = microseconds < 10 ? "0" + microseconds : microseconds.ToString();
 
