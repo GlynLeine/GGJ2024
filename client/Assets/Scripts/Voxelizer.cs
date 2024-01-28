@@ -12,6 +12,8 @@ public class Voxelizer : MonoBehaviour {
     [Range(0.0f, 2.0f)]
     public float intersectionBias = 1.0f;
 
+    public float smokeDuration = 1.0f;
+
     public Mesh debugMesh;
 
     public bool debugStaticVoxels = false;
@@ -36,6 +38,7 @@ public class Voxelizer : MonoBehaviour {
     private int voxelsX, voxelsY, voxelsZ, totalVoxels;
     private float radius;
     private Vector3 smokeOrigin;
+    private float smokeTime;
 
     private void OnValidate()
     {
@@ -153,7 +156,7 @@ public class Voxelizer : MonoBehaviour {
         if (x < 0.5f) ease = 2 * x * x;
         else ease = 1.0f - (1.0f / (5.0f * (2.0f * x - 0.8f) + 1));
 
-        return Mathf.Min(1.0f, ease);
+        return Mathf.Clamp01(ease);
         //return 1 - (1 - x) * (1 - x);
     }
 
@@ -168,6 +171,7 @@ public class Voxelizer : MonoBehaviour {
         voxelizeCompute.Dispatch(0, Mathf.CeilToInt(totalVoxels / 128.0f), 1, 1);
 
         voxelizeCompute.Dispatch(2, 1, 1, 1);
+        smokeTime = 0;
     }
 
     void Update() {
@@ -179,7 +183,14 @@ public class Voxelizer : MonoBehaviour {
             voxelizeCompute.Dispatch(4, Mathf.CeilToInt(totalVoxels / 128.0f), 1, 1);
 
             iterateFill = false;
-            radius += growthSpeed * Time.deltaTime;
+            radius += (smokeTime > smokeDuration? -1.0f : 1.0f) * growthSpeed * Time.deltaTime;
+
+            smokeTime += Time.deltaTime;
+        }
+
+        if(smokeTime > (smokeDuration*2.0f))
+        {
+            CreateSmoke(new Vector3(0.0f, -1000.0f, 0.0f));
         }
 
         if (debugStaticVoxels || debugSmokeVoxels || debugEdgeVoxels) {
