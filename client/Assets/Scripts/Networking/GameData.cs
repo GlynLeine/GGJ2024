@@ -4,25 +4,10 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum NetworkType
+public class GameData : MonoBehaviour
 {
-    Host,
-    Client,
-    Server
-}
-public enum PlayerType
-{
-    Player,
-    Spectator
-}
-
-public class GameData : NetworkBehaviour
-{
-    public string gameSceneName;
-    public NetworkType networkType;
-    public PlayerType playerType;
-
-    [SerializeField] public static List<GameObject> spawnedGrenades = new List<GameObject>();
+    [SerializeField] private string gameSceneName;
+    [SerializeField] private string mainMenuSceneName;
 
     private void Start()
     {
@@ -39,17 +24,5 @@ public class GameData : NetworkBehaviour
     {
         if (!gameSceneName.Equals(scene.name)) return;
 
-        switch (networkType)
-        {
-            case NetworkType.Client:
-                NetworkManager.Singleton.StartClient();
-                break;
-            case NetworkType.Host:
-                NetworkManager.Singleton.StartHost();
-                break;
-            case NetworkType.Server:
-                NetworkManager.Singleton.StartServer();
-                break;
-        }
     }
 }
