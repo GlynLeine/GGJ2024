@@ -29,7 +29,7 @@ MonoBehaviour:
     debugNoiseAxis: 1
     debugNoiseSlice: 128
     cubeParams: {x: 0, y: 0, z: 0, w: 1}
-    lightColor: {r: 3.5816119, g: 2.7608259, b: 1.4363756, a: 0}
+    lightColor: {r: 2.1517525, g: 3.5186336, b: 1.709525, a: 0}
     smokeColor: {r: 0.05, g: 0.0465, b: 0.043, a: 0}
     stepCount: 150
     stepSize: 0.05
@@ -43,8 +43,8 @@ MonoBehaviour:
     shadowDensity: 2.5
     phaseFunction: 1
     scatteringAnisotropy: 0
-    densityFalloff: 0.25
-    alphaThreshold: 0.1
+    densityFalloff: 0.7
+    alphaThreshold: 0
     animationDirection: {x: 0, y: -0.1, z: 0}
     bicubicUpscale: 0
     sharpness: -1
