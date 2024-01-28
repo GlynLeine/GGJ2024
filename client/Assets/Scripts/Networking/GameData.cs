@@ -20,27 +20,20 @@ struct Score
 
 public class GameData : MonoBehaviour
 {
-    [SerializeField] private Button m_startButton;
+    private Button m_startButton;
     [SerializeField] private string gameSceneName;
     [SerializeField] private string mainMenuSceneName;
 
-    [SerializeField] private TMP_InputField m_playerName;
+    private TMP_InputField m_playerName;
     string PlayerName;
     public static Dictionary<string, float> playerScores = new Dictionary<string, float>();
 
     private void Awake()
     {
-        GameData data = FindObjectOfType<GameData>();
-        if (data)
-        {
-            Destroy(data.gameObject);
-        }
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded += OnSceneLoaded;
-        m_startButton.onClick.AddListener(() =>
-        {
-            PlayerName = m_playerName.text;
-        });
+
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 
     public static void AddScore(string name, float score)
@@ -100,10 +93,21 @@ public class GameData : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name.Equals(mainMenuSceneName) && playerScores.Count > 0)
+        if (scene.name.Equals(mainMenuSceneName))
         {
-            var pair = GetHighestScore();
-            FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{pair.name}, {pair.score}";
+            m_startButton = GameObject.FindAnyObjectByType<StartButton>().GetComponent<Button>();
+            m_playerName = GameObject.FindAnyObjectByType<PlayerName>().GetComponent<TMP_InputField>();
+
+            m_startButton.onClick.AddListener(() =>
+            {
+                PlayerName = m_playerName.text;
+            });
+
+            if (playerScores.Count > 0)
+            {
+                var pair = GetHighestScore();
+                FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{pair.name}, {pair.score}";
+            }
         }
 
         if (scene.name.Equals(gameSceneName))

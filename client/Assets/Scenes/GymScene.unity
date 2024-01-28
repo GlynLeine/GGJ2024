@@ -7642,11 +7642,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1007871184327483295, guid: 11dcc422b50be504e998eeae45272cc9,
-        type: 3}
-      propertyPath: gameDuration
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 6014589902148330848, guid: 11dcc422b50be504e998eeae45272cc9,
         type: 3}
       propertyPath: m_LocalPosition.x
