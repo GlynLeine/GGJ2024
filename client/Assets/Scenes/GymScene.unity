@@ -6274,7 +6274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boundsExtent: {x: 30, y: 20, z: 30}
-  voxelSize: 0.5
+  voxelSize: 1
   objectsToVoxelize: {fileID: 333641821}
   intersectionBias: 1
   smokeDuration: 2
