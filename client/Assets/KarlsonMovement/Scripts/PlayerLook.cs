@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode.Components;
 
-public class PlayerLook : NetworkBehaviour
+public class PlayerLook : MonoBehaviour
 {
     [Header("References")]
     [SerializeField] WallRun wallRun;
@@ -23,21 +23,21 @@ public class PlayerLook : NetworkBehaviour
 
     private void Update()
     {
-        if (!IsOwner)
-        {
-            mouseLookServerRpc();
-            return;
-        }
+        //if (!IsOwner)
+        //{
+        //    mouseLookServerRpc();
+        //    return;
+        //}
         mouseLook();
     }
 
-    [ServerRpc(RequireOwnership = false)]
-    void mouseLookServerRpc(ServerRpcParams serverRpcParams = default)
-    {
-        var clientId = serverRpcParams.Receive.SenderClientId;
-        if (NetworkManager.ConnectedClients.ContainsKey(clientId))
-            mouseLook();
-    }
+    //[ServerRpc(RequireOwnership = false)]
+    //void mouseLookServerRpc(ServerRpcParams serverRpcParams = default)
+    //{
+    //    var clientId = serverRpcParams.Receive.SenderClientId;
+    //    if (NetworkManager.ConnectedClients.ContainsKey(clientId))
+    //        mouseLook();
+    //}
 
     void mouseLook()
     {

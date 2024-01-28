@@ -4,17 +4,16 @@ using UnityEngine;
 using Unity.Netcode;
 
 [RequireComponent(typeof(Rigidbody))]
-public class Grenade : NetworkBehaviour
+public class Grenade : MonoBehaviour
 {
     [HideInInspector] public GrenadeLauncher parent;
     [SerializeField] private float lifeSpan = 3;
     [HideInInspector] public int bounces = 0;
     [HideInInspector] public Voxelizer voxelizer;
 
-
     private void Update()
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
 
         lifeSpan -= Time.deltaTime;
         if (lifeSpan <= 0)
@@ -25,7 +24,7 @@ public class Grenade : NetworkBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (!IsOwner) return;
+        //if (!IsOwner) return;
 
         bounces -= 1;
         if (bounces < 0)
@@ -35,19 +34,20 @@ public class Grenade : NetworkBehaviour
     private void explode()
     {
         //Debug.Log("KABOOM");
-        if (IsOwner)
-            FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
-        else
-            instantiateSmokeServerRpc();
+        //if (IsOwner)
+        //    FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
+        //else
+        //    instantiateSmokeServerRpc();
 
-        parent.DestroyServerRpc();
+        //parent.DestroyServerRpc();
+        voxelizer.CreateSmoke(transform.position);
         Destroy(gameObject);
     }
 
 
-    [ServerRpc(RequireOwnership = false)]
-    private void instantiateSmokeServerRpc()
-    {
-        FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
-    }
+    //[ServerRpc(RequireOwnership = false)]
+    //private void instantiateSmokeServerRpc()
+    //{
+    //    FindObjectOfType<Voxelizer>().CreateSmoke(transform.position);
+    //}
 }
