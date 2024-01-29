@@ -96,13 +96,16 @@ public class GameData : MonoBehaviour
     {
         if (scene.name.Equals(mainMenuSceneName))
         {
-            m_startButton = GameObject.FindAnyObjectByType<StartButton>().GetComponent<Button>();
-            m_playerName = GameObject.FindAnyObjectByType<PlayerName>().GetComponent<TMP_InputField>();
+            m_startButton = GameObject.FindAnyObjectByType<StartButton>()?.GetComponent<Button>();
+            m_playerName = GameObject.FindAnyObjectByType<PlayerName>()?.GetComponent<TMP_InputField>();
 
-            m_startButton.onClick.AddListener(() =>
+            if (m_startButton != null && m_playerName != null)
             {
-                PlayerName = m_playerName.text;
-            });
+                m_startButton.onClick.AddListener(() =>
+                {
+                    PlayerName = m_playerName.text;
+                });
+            }
 
             if (playerScores.Count > 0)
             {
