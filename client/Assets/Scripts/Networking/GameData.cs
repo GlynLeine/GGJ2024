@@ -21,10 +21,11 @@ struct Score
 
 public class GameData : MonoBehaviour
 {
-    private Button m_startButton;
+
     [SerializeField] private string gameSceneName;
     [SerializeField] private string mainMenuSceneName;
 
+    private Button m_startButton;
     private TMP_InputField m_playerName;
     string PlayerName;
     public static Dictionary<string, float> playerScores = new Dictionary<string, float>();
@@ -99,13 +100,10 @@ public class GameData : MonoBehaviour
             m_startButton = GameObject.FindAnyObjectByType<StartButton>()?.GetComponent<Button>();
             m_playerName = GameObject.FindAnyObjectByType<PlayerName>()?.GetComponent<TMP_InputField>();
 
-            if (m_startButton != null && m_playerName != null)
+            m_startButton.onClick.AddListener(() =>
             {
-                m_startButton.onClick.AddListener(() =>
-                {
-                    PlayerName = m_playerName.text;
-                });
-            }
+                PlayerName = m_playerName.text;
+            });
 
             if (playerScores.Count > 0)
             {

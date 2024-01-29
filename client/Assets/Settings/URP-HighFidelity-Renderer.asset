@@ -121,7 +121,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_DefaultStencilState:
     overrideStencilState: 0
-    stencilReference: 0
+    stencilReference: 7
     stencilCompareFunction: 8
     passOperation: 2
     failOperation: 0
@@ -145,7 +145,7 @@ MonoBehaviour:
   m_Name: Toon
   m_EditorClassIdentifier: 
   m_Active: 1
-  injectionPoint: 600
+  injectionPoint: 450
   fetchColorBuffer: 1
   requirements: 7
   passMaterial: {fileID: 2100000, guid: 07e6846564285164a99b45903717bb6e, type: 2}

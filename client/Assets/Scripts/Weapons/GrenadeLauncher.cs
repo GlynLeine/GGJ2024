@@ -26,6 +26,7 @@ public static class AudioSourceExtension
 
 public class GrenadeLauncher : Weapon_Ranged
 {
+    [SerializeField] private Transform m_firePoint;
     [SerializeField] private AudioSource grenadeShootAudioSource;
     [SerializeField] private Grenade grenadePrefab;
     [SerializeField] private float grenadeForce;
@@ -79,6 +80,7 @@ public class GrenadeLauncher : Weapon_Ranged
             grenadeShootAudioSource.Play();
             StartCoroutine(WaitTillClipEnd(grenadeShootAudioSource, .3f));
         }
+        currentAmmo--;
         onCoolDown = true;
     }
 
@@ -87,8 +89,7 @@ public class GrenadeLauncher : Weapon_Ranged
         var waitForClipRemainingTime = new WaitForSeconds(source.GetClipRemainingTime() * modifier);
         yield return waitForClipRemainingTime;
 
-        currentAmmo--;
-        m_grenade = Instantiate(grenadePrefab, transform.position + transform.up + transform.forward, Quaternion.LookRotation(transform.forward, m_camera.transform.up));
+        m_grenade = Instantiate(grenadePrefab, m_firePoint.position, Quaternion.LookRotation(transform.forward, m_camera.transform.up));
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
         m_grenade.voxelizer = voxelizer;

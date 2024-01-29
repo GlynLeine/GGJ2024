@@ -23,28 +23,15 @@ public class PlayerLook : MonoBehaviour
 
     private void Update()
     {
-        //if (!IsOwner)
-        //{
-        //    mouseLookServerRpc();
-        //    return;
-        //}
         mouseLook();
     }
-
-    //[ServerRpc(RequireOwnership = false)]
-    //void mouseLookServerRpc(ServerRpcParams serverRpcParams = default)
-    //{
-    //    var clientId = serverRpcParams.Receive.SenderClientId;
-    //    if (NetworkManager.ConnectedClients.ContainsKey(clientId))
-    //        mouseLook();
-    //}
 
     void mouseLook()
     {
         if (!Movement.MouseLocked) return;
         var delta = Mouse.current.delta.ReadValue();
-        m_mouseX = delta.x; //Input.GetAxisRaw("Mouse X");
-        m_mouseY = delta.y;// Input.GetAxisRaw("Mouse Y");
+        m_mouseX = delta.x; 
+        m_mouseY = delta.y;
 
         m_yRotation += m_mouseX * sensX * m_multiplier;
         m_xRotation -= m_mouseY * sensY * m_multiplier;
