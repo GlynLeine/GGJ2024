@@ -20,7 +20,7 @@ public class TimeScore : MonoBehaviour
     private void Start()
     {
         enemies = GameObject.FindObjectsOfType<Health>().ToList();
-        Debug.Log("Enemies found: " + enemies.Count);
+        //Debug.Log("Enemies found: " + enemies.Count);
     }
 
     // Update is called once per frame

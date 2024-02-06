@@ -29,6 +29,7 @@ public class PlayerLook : MonoBehaviour
     void mouseLook()
     {
         if (!Movement.MouseLocked) return;
+
         var delta = Mouse.current.delta.ReadValue();
         m_mouseX = delta.x; 
         m_mouseY = delta.y;

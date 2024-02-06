@@ -323,6 +323,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   footAudioSource: {fileID: 4336271357911266121}
+  m_slowDownCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   m_wallRunning: 0
   m_camera: {fileID: 2154531463307433048}
   m_moveSpeed: 10
@@ -333,7 +357,7 @@ MonoBehaviour:
   m_maxSlopeAngle: 45
   m_deceleration_rate: 0.9
   m_jumpCooldown: 0.25
-  m_jumpForce: 450
+  m_jumpForce: 300
   m_crouchHeight: 0.5
   m_slideForce: 40
   m_slideCounterMovement: 0.2

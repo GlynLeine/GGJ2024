@@ -3,23 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Movement : MonoBehaviour
 {
     [SerializeField] private AudioSource footAudioSource;
-
+    [SerializeField]
+    private AnimationCurve m_slowDownCurve;
     private Vector2 m_movementInput = Vector2.zero;
+    public Vector2 MoveInput => m_movementInput;
     private float m_moveMultiplier = 100.0f;
-    private float m_counterMovement = 0.175f;
+    private float m_counterMovement = 0.3f;
     private float m_threshold = 0.01f;
 
+    [Header("Debug Bools")]
+    [SerializeField]
     private bool m_grounded = false;
     public bool Grounded { get { return m_grounded; } }
+    [SerializeField]
     private bool m_jumping = false;
+    [SerializeField]
     private bool m_crouching = false;
+    [SerializeField]
     private bool m_running = false;
+    [SerializeField]
     private bool m_cancellingGrounded = false;
+    [SerializeField]
     private bool m_mouseLocked = true;
     [HideInInspector] public bool m_wallRunning = false;
 
@@ -38,18 +48,23 @@ public class Movement : MonoBehaviour
     [Header("Movement")]
     [SerializeField] private float m_moveSpeed = 20f;
     [SerializeField] private float m_maxSpeed = 50f;
-    [SerializeField] private LayerMask m_whatIsGround;
+    [SerializeField] public LayerMask m_whatIsGround;
     [SerializeField] private float m_maxSlopeAngle = 35f;
-    [SerializeField] private float m_deceleration_rate = .9f;
+    //[SerializeField] private float m_deceleration_rate = .9f;
+    [SerializeField] private float m_deccelerationTime = 1.0f;
+    private float m_timeSinceLastMove = 0;
+
 
     [Header("Jumping")]
     [SerializeField] private float m_jumpCooldown = 0.25f;
     [SerializeField] private float m_jumpForce = 100f;
+    [SerializeField] private float m_inAirMoveFactor = .7f;
 
     [Header("Crouch & Slide")]
     [SerializeField] private float m_crouchHeight = .5f;
     [SerializeField] private float m_slideForce = 40;
     [SerializeField] private float m_slideCounterMovement = 0.2f;
+    private Vector3 m_velocity;
 
     private void Start()
     {
@@ -62,15 +77,9 @@ public class Movement : MonoBehaviour
         m_crouching = value.isPressed;
 
         if (m_crouching)
-        {
-            m_camera.position = new Vector3(m_camera.position.x, m_camera.position.y - 0.5f, m_camera.position.z); if (m_rb.velocity.magnitude > 0.5f)
-                if (m_grounded && m_rb.velocity.magnitude > 0.5f)
-                {
-                    m_rb.AddForce(transform.forward * m_slideForce);
-                }
-        }
+            m_camera.position = new Vector3(m_camera.position.x, m_camera.position.y - m_crouchHeight, m_camera.position.z);
         else
-            m_camera.position = new Vector3(m_camera.position.x, m_camera.position.y + 0.5f, m_camera.position.z);
+            m_camera.position = new Vector3(m_camera.position.x, m_camera.position.y + m_crouchHeight, m_camera.position.z);
 
     }
 
@@ -99,13 +108,42 @@ public class Movement : MonoBehaviour
             Cursor.visible = true;
         }
     }
+
     public void UnlockMouse()
     {
         m_mouseLocked = false;
     }
+
     void FixedUpdate()
     {
+        m_velocity = m_rb.velocity;
+
         Move();
+
+        if (!m_isMoving && m_grounded && !m_crouching && m_timeSinceLastMove < m_deccelerationTime)
+        {
+            Debug.Log("Slowing Down");
+            float fallspeed = m_rb.velocity.y;
+            m_timeSinceLastMove += (Time.fixedDeltaTime / m_deccelerationTime);
+            Vector3 n = new Vector3(m_velocity.x, 0, m_velocity.z) * m_slowDownCurve.Evaluate(m_deccelerationTime - m_timeSinceLastMove);
+            m_velocity -= n;
+            m_velocity.y = fallspeed;
+        }
+
+        if (!m_grounded)
+        {
+            float fallspeed = m_rb.velocity.y;
+            float speed = new Vector3(m_velocity.x, 0, m_velocity.z).magnitude * m_inAirMoveFactor;
+            Vector3 n = m_velocity.normalized * speed;
+            m_rb.velocity += new Vector3(n.x, fallspeed, n.z);
+        }
+        else
+        {
+            m_rb.velocity = m_velocity;
+        }
+
+        if (footAudioSource != null && m_grounded && m_rb.velocity.magnitude > 0)
+            footAudioSource.Play();
     }
 
     public void OnMove(InputValue value)
@@ -114,72 +152,69 @@ public class Movement : MonoBehaviour
         m_movementInput = inputValue;
         if (m_wallRunning) m_movementInput.x = 0;
         m_isMoving = inputValue.x != 0 || inputValue.y != 0;
+
+        if (m_isMoving && m_grounded)
+            m_timeSinceLastMove = 0;
     }
 
     private void Move()
     {
-        Vector2 input = m_movementInput;
-        if (!m_grounded)
+        var forwardVec = transform.forward * .7f * m_movementInput.y;
+        var rightVec = transform.right * m_movementInput.x;
+        m_velocity += (forwardVec + rightVec).normalized * m_moveSpeed * Time.fixedDeltaTime * m_moveMultiplier;
+        //m_rb.AddForce((forwardVec + rightVec).normalized * m_moveSpeed * Time.fixedDeltaTime * m_moveMultiplier, ForceMode.Acceleration);
+
+        if (m_crouching && m_grounded && m_rb.velocity.magnitude > 0.5f)
         {
-            m_movementInput = m_movementInput / 2f;
-        }
-        Vector2 mag = findVelRelativeToLook();
-
-        //counterMovement(m_movementInput, mag);
-
-        Vector2 movement = Vector2.Max(Vector2.Min(mag + m_movementInput, new Vector2(m_maxSpeed, m_maxSpeed)), new Vector2(-m_maxSpeed, -m_maxSpeed)) - mag;
-
-        m_rb.AddForce((transform.forward * .7f * movement.y + transform.right * 1.5f * movement.x).normalized * m_moveSpeed * Time.fixedDeltaTime * m_moveMultiplier, ForceMode.Acceleration);
-
-        if (m_rb.velocity.magnitude > m_maxSpeed)
-        {
-            m_rb.velocity = m_rb.velocity.normalized * m_maxSpeed;
-        }
-        if (!m_isMoving && m_grounded && !m_crouching)
-        {
-            m_rb.velocity *= m_deceleration_rate;
+            m_velocity += -m_velocity.normalized * Time.fixedDeltaTime * m_slideCounterMovement;
+            //rb.AddForce(moveSpeed * Time.deltaTime * -rb.velocity.normalized * slideCounterMovement);
         }
 
-        if (footAudioSource != null && m_grounded && m_rb.velocity.magnitude > 0)
-            footAudioSource.Play();
+        if (m_velocity.magnitude > m_maxSpeed)
+        {
+            float fallspeed = m_rb.velocity.y;
+            Vector3 n = m_velocity.normalized * m_maxSpeed;
+            m_velocity = new Vector3(n.x, fallspeed, n.z);
+        }
     }
 
     public void OnJump()
     {
-        if (!m_grounded)
-            return;
+        if (m_grounded || m_wallRunning)
+        {
+            if (m_isMoving)
+                m_timeSinceLastMove = 0;
 
-        m_grounded = false;
+            if (m_grounded)
+            {
+                m_grounded = false;
+            }
+            if (m_wallRunning)
+            {
+                m_wallRunning = false;
+            }
 
-        m_rb.AddForce((Vector3.up * 1.5f + m_normalVector * 0.5f) * m_jumpForce);
+            var projectedVelocity = m_velocity.normalized * .3f;
+            var force = (Vector3.up + (m_normalVector * .5f) + projectedVelocity).normalized * m_jumpForce;
+            var lateralForce = Vector3.ProjectOnPlane(force, m_normalVector);
+            m_rb.AddForce(lateralForce * 150.0f, ForceMode.Force);
+            m_rb.AddForce(force - lateralForce, ForceMode.Impulse);
+
+        }
     }
 
     private void counterMovement(Vector2 movementInput, Vector2 mag)
     {
-        //Slow down sliding
-        if (m_crouching)
-        {
-            m_rb.velocity = m_moveSpeed * Time.deltaTime * -m_rb.velocity.normalized * m_slideCounterMovement;
-            //rb.AddForce(moveSpeed * Time.deltaTime * -rb.velocity.normalized * slideCounterMovement);
-            return;
-        }
-
         //Counter movement
         if (Mathf.Abs(mag.x) > m_threshold && Mathf.Abs(movementInput.x) < 0.05f || (mag.x < -m_threshold && movementInput.x > 0) || (mag.x > m_threshold && movementInput.x < 0))
         {
-            m_rb.AddForce(m_moveSpeed * transform.right * Time.deltaTime * -mag.x * m_counterMovement);
+            m_velocity += transform.right * Time.fixedDeltaTime * -mag.x * m_counterMovement;
+            //m_rb.AddForce(m_moveSpeed * transform.right * Time.deltaTime * -mag.x * m_counterMovement);
         }
         if (Mathf.Abs(mag.y) > m_threshold && Mathf.Abs(movementInput.y) < 0.05f || (mag.y < -m_threshold && movementInput.y > 0) || (mag.y > m_threshold && movementInput.y < 0))
         {
-            m_rb.AddForce(m_moveSpeed * transform.forward * Time.deltaTime * -mag.y * m_counterMovement);
-        }
-
-        //Limit diagonal running. This will also cause a full stop if sliding fast and un-crouching, so not optimal.
-        if (Mathf.Sqrt((Mathf.Pow(m_rb.velocity.x, 2) + Mathf.Pow(m_rb.velocity.z, 2))) > m_maxSpeed)
-        {
-            float fallspeed = m_rb.velocity.y;
-            Vector3 n = m_rb.velocity.normalized * m_maxSpeed;
-            m_rb.velocity = new Vector3(n.x, fallspeed, n.z);
+            m_velocity += transform.forward * Time.fixedDeltaTime * -mag.y * m_counterMovement;
+            //m_rb.AddForce(m_moveSpeed * transform.forward * Time.deltaTime * -mag.y * m_counterMovement);
         }
     }
 
@@ -202,12 +237,12 @@ public class Movement : MonoBehaviour
         for (int i = 0; i < other.contactCount; i++)
         {
             Vector3 normal = other.contacts[i].normal;
+            sumNormals += normal;
             //FLOOR
             if (isFloor(normal))
             {
                 m_grounded = true;
                 m_cancellingGrounded = false;
-                sumNormals += normal;
                 CancelInvoke(nameof(stopGrounded));
             }
         }
@@ -247,5 +282,10 @@ public class Movement : MonoBehaviour
     {
         float angle = Vector3.Angle(Vector3.up, v);
         return angle < m_maxSlopeAngle;
+    }
+
+    private void OnDrawGizmos()
+    {
+        //Gizmos.DrawRay(transform.position, m_normalVector.normalized * 5);
     }
 }

@@ -20,7 +20,7 @@ public class BetterGravity : MonoBehaviour
         if (UseGravity)
         {
             Vector3 gravity = Vector3.up * baseGravityRate * GravityScale;
-            rb.AddForce(gravity,ForceMode.Acceleration);
+            rb.AddForce(gravity, ForceMode.Acceleration);
         }
     }
 }

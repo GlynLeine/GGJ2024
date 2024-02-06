@@ -41,21 +41,21 @@ public class WallRun : MonoBehaviour
 
     bool CanWallRun()
     {
-        return !Physics.Raycast(transform.position, Vector3.down, minimumJumpHeight) && rb.velocity.magnitude > minimumSpeed && !movement.Grounded;
+        return (wallLeft || wallRight) && !Physics.Raycast(transform.position, Vector3.down, minimumJumpHeight, movement.m_whatIsGround) && rb.velocity.magnitude > minimumSpeed && !movement.Grounded;
     }
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
         movement = GetComponent<Movement>();
-        gravity = GetComponent<BetterGravity> ();
+        gravity = GetComponent<BetterGravity>();
     }
 
     void CheckWall()
     {
-        wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallDistance);
+        wallLeft = Physics.Raycast(transform.position, -orientation.right, out leftWallHit, wallDistance, ~movement.m_whatIsGround);
         Debug.DrawRay(transform.position, -orientation.right * wallDistance, Color.red);
-        wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallDistance);
+        wallRight = Physics.Raycast(transform.position, orientation.right, out rightWallHit, wallDistance, ~movement.m_whatIsGround);
         Debug.DrawRay(transform.position, orientation.right * wallDistance, Color.yellow);
     }
 
@@ -63,24 +63,25 @@ public class WallRun : MonoBehaviour
     {
         CheckWall();
 
-        if (CanWallRun())
+        if (CanWallRun() && !movement.m_wallRunning)
         {
-            if (wallLeft)
-            {
-                StartWallRun();
-                Debug.Log("wall running on the left");
-            }
-            else if (wallRight)
-            {
-                StartWallRun();
-                Debug.Log("wall running on the right");
-            }
-            else
-            {
-                StopWallRun();
-            }
+            StartWallRun();
+            //if (wallLeft)
+            //{
+
+            //    Debug.Log("wall running on the left");
+            //}
+            //else if (wallRight)
+            //{
+            //    StartWallRun();
+            //    Debug.Log("wall running on the right");
+            //}
+            //else
+            //{
+            //    StopWallRun();
+            //}
         }
-        else
+        else if (Mathf.Abs(movement.MoveInput.magnitude) < Mathf.Epsilon && movement.m_wallRunning)
         {
             StopWallRun();
         }
@@ -88,43 +89,48 @@ public class WallRun : MonoBehaviour
 
     void StartWallRun()
     {
-        //Debug.Log("Starting wall run");
         gravity.UseGravity = false;
         movement.m_wallRunning = true;
-        rb.AddForce(Vector3.down * wallRunGravity, ForceMode.Force);
+        rb.velocity = Vector3.zero;
+        //rb.AddForce(Vector3.down * wallRunGravity, ForceMode.Force);
 
         cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, wallRunfov, wallRunfovTime * Time.deltaTime);
 
         if (wallLeft)
+        {
+            Debug.Log("Starting wall run left");
             StartCoroutine(TiltCamera(-camTilt));
+        }
         else if (wallRight)
+        {
+            Debug.Log("Starting wall run right");
             StartCoroutine(TiltCamera(camTilt));
-
-
+        }
     }
 
     public void OnJump()
     {
-        if (wallLeft)
-        {
-            Vector3 wallRunJumpDirection = transform.up * .75f + leftWallHit.normal * 1.5f;
-            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            rb.AddForce(wallRunJumpDirection * wallRunJumpForce, ForceMode.Impulse);
-        }
-        else if (wallRight)
-        {
-            Vector3 wallRunJumpDirection = transform.up * .75f + rightWallHit.normal * 1.5f;
-            rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
-            rb.AddForce(wallRunJumpDirection * wallRunJumpForce , ForceMode.Impulse);
-        }
+        //if (wallLeft)
+        //{
+        //    Vector3 wallRunJumpDirection = transform.up * .75f + leftWallHit.normal * 1.5f;
+        //    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        //    rb.AddForce(wallRunJumpDirection * wallRunJumpForce, ForceMode.Impulse);
+        //}
+        //else if (wallRight)
+        //{
+        //    Vector3 wallRunJumpDirection = transform.up * .75f + rightWallHit.normal * 1.5f;
+        //    rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+        //    rb.AddForce(wallRunJumpDirection * wallRunJumpForce , ForceMode.Impulse);
+        //}
     }
 
 
     void StopWallRun()
     {
-        //Debug.Log("stopping wall run");
+        Debug.Log("Stopping wall run");
         gravity.UseGravity = true;
         movement.m_wallRunning = false;
+        rb.velocity = Vector3.zero;
         if (canFov)
         {
             cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, fov, wallRunfovTime * Time.deltaTime);
