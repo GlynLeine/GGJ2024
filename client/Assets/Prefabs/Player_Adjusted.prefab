@@ -347,6 +347,12 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  m_grounded: 0
+  m_jumping: 0
+  m_crouching: 0
+  m_running: 0
+  m_cancellingGrounded: 0
+  m_mouseLocked: 1
   m_wallRunning: 0
   m_camera: {fileID: 2154531463307433048}
   m_moveSpeed: 10
@@ -355,9 +361,10 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   m_maxSlopeAngle: 45
-  m_deceleration_rate: 0.9
+  m_deccelerationTime: 0.9
   m_jumpCooldown: 0.25
-  m_jumpForce: 300
+  m_jumpForce: 12
+  m_inAirMoveFactor: 0.7
   m_crouchHeight: 0.5
   m_slideForce: 40
   m_slideCounterMovement: 0.2
@@ -567,7 +574,7 @@ Transform:
   m_GameObject: {fileID: 6942781131024902988}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.466353, y: -2.0173347, z: 10.446681}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

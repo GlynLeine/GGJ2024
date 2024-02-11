@@ -32,7 +32,7 @@ public class TimeScore : MonoBehaviour
         {
             currentTime += enemies.Where(x => !x.Dead).Count() * 10.0f;
 
-            psychoEffects.SetFloat("_Psychoness", 1);
+            psychoEffects.SetFloat("_Psychoness", 0.0f);
             onGameEnd?.Invoke();
         }
         float psychoness = Mathf.Clamp01(currentTime / gameDuration);

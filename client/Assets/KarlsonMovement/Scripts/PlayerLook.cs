@@ -39,7 +39,7 @@ public class PlayerLook : MonoBehaviour
 
         m_xRotation = Mathf.Clamp(m_xRotation, -90f, 90f);
 
-        transform.rotation = Quaternion.Euler(m_xRotation, m_yRotation, wallRun.tilt);
+        transform.localRotation = Quaternion.Euler(m_xRotation, 0, wallRun.tilt);
         orientation.transform.rotation = Quaternion.Euler(0, m_yRotation, 0);
     }
 }
