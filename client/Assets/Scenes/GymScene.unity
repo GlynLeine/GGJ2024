@@ -18772,8 +18772,13 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
         type: 3}
-      propertyPath: m_deccelerationTime
-      value: 0.3
+      propertyPath: m_maxSpeed
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4351281389870807324, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4863815606434991560, guid: 7b891cd3974e6554d9335a90fd463ae7,
         type: 3}

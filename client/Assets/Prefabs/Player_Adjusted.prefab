@@ -322,6 +322,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 772f7c8e3aa16a84cb50bd3b875a1ae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_wallRunning: 0
+  m_camera: {fileID: 2154531463307433048}
   footAudioSource: {fileID: 4336271357911266121}
   m_slowDownCurve:
     serializedVersion: 2
@@ -347,27 +349,44 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  m_grounded: 0
-  m_jumping: 0
-  m_crouching: 0
-  m_running: 0
-  m_cancellingGrounded: 0
-  m_mouseLocked: 1
-  m_wallRunning: 0
-  m_camera: {fileID: 2154531463307433048}
-  m_moveSpeed: 10
-  m_maxSpeed: 15
+  m_acceleration: 50
+  m_maxSpeed: 20
   m_whatIsGround:
     serializedVersion: 2
     m_Bits: 8
   m_maxSlopeAngle: 45
-  m_deccelerationTime: 0.9
+  m_deccelerationTime: 0.3
   m_jumpCooldown: 0.25
   m_jumpForce: 12
-  m_inAirMoveFactor: 0.7
+  m_inAirMoveFactor: 0.01
+  m_crouchFactor: 0.3
+  m_slideSpeedCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_slideTime: 3
+  m_slideThresholdSpeed: 7
   m_crouchHeight: 0.5
-  m_slideForce: 40
-  m_slideCounterMovement: 0.2
 --- !u!114 &4351281389870807324
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -89,7 +89,7 @@ public class GrenadeLauncher : Weapon_Ranged
         var waitForClipRemainingTime = new WaitForSeconds(source.GetClipRemainingTime() * modifier);
         yield return waitForClipRemainingTime;
 
-        m_grenade = Instantiate(grenadePrefab, m_firePoint.position, Quaternion.LookRotation(transform.forward, m_camera.transform.up));
+        m_grenade = Instantiate(grenadePrefab, m_firePoint.position, Quaternion.LookRotation(m_camera.transform.forward, m_camera.transform.up));
         m_grenade.bounces = amountOfBounces;
         m_grenade.parent = this;
         m_grenade.voxelizer = voxelizer;
