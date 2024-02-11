@@ -1,13 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
-using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static System.Net.Mime.MediaTypeNames;
 
-struct Score
+public struct Score
 {
     public string name;
     public float score;
@@ -28,7 +26,7 @@ public class GameData : MonoBehaviour
     private Button m_startButton;
     private TMP_InputField m_playerName;
     string PlayerName;
-    public static Dictionary<string, float> playerScores = new Dictionary<string, float>();
+    public static List<Score> playerScores = new List<Score>();
 
     private void Awake()
     {
@@ -40,24 +38,25 @@ public class GameData : MonoBehaviour
 
     public static void AddScore(string name, float score)
     {
-        playerScores.Add(name, score);
+        playerScores.Add(new Score(name, score));
     }
 
-    public static (string name, float score) GetHighestScore()
+    public static List<Score> GetSortedScoreList()
     {
         LoadScoresFromFile();
-        float BestScore = Mathf.Infinity;
-        string topPlayer = "";
-        foreach (var pair in playerScores)
-        {
-            if (pair.Value < BestScore)
-            {
-                BestScore = pair.Value;
-                topPlayer = pair.Key;
-            }
-        }
 
-        return (topPlayer, BestScore);
+        List<Score> sorted = playerScores;
+
+        sorted.Sort((a, b) => b.score.CompareTo(a.score));
+
+        return sorted;
+    }
+
+    public static Score GetHighestScore()
+    {
+        LoadScoresFromFile();
+        var sortedList = GetSortedScoreList();
+        return sortedList[0];
     }
 
     public static void LoadScoresFromFile()
@@ -69,7 +68,7 @@ public class GameData : MonoBehaviour
             if (!PlayerPrefs.HasKey($"Score [{i}]"))
                 break;
             var score = JsonUtility.FromJson<Score>(PlayerPrefs.GetString($"Score [{i}]"));
-            playerScores.Add(score.name, score.score);
+            playerScores.Add(score);
             i++;
         }
     }
@@ -78,9 +77,9 @@ public class GameData : MonoBehaviour
     {
         PlayerPrefs.DeleteAll();
         int i = 0;
-        foreach (var pair in playerScores)
+        foreach (var entry in playerScores)
         {
-            PlayerPrefs.SetString($"Score [{i}]", JsonUtility.ToJson(new Score(pair.Key, pair.Value)));
+            PlayerPrefs.SetString($"Score [{i}]", JsonUtility.ToJson(entry));
             i++;
         }
         PlayerPrefs.Save();
@@ -91,14 +90,31 @@ public class GameData : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
+    public static string FormatToTime(Score entry)
+    {
+        int minutes = Mathf.FloorToInt(entry.score / 60.0f);
+
+        string minutesText = minutes < 10 ? "0" + minutes : minutes.ToString();
+
+        int seconds = Mathf.FloorToInt(entry.score - (minutes * 60));
+
+        string secondsText = seconds < 10 ? "0" + seconds : seconds.ToString();
+
+        int microseconds = Mathf.FloorToInt((entry.score - (seconds + (minutes * 60))) * 100);
+
+        string microsecondsText = microseconds < 10 ? "0" + microseconds : microseconds.ToString();
+
+        return minutesText + ":" + secondsText + "." + microsecondsText;
+    }
+
     TimeScore timeScore;
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (scene.name.Equals(mainMenuSceneName))
         {
-            m_startButton = GameObject.FindAnyObjectByType<StartButton>()?.GetComponent<Button>();
-            m_playerName = GameObject.FindAnyObjectByType<PlayerName>()?.GetComponent<TMP_InputField>();
+            m_startButton = FindAnyObjectByType<StartButton>()?.GetComponent<Button>();
+            m_playerName = FindAnyObjectByType<PlayerName>()?.GetComponent<TMP_InputField>();
 
             m_startButton.onClick.AddListener(() =>
             {
@@ -107,21 +123,8 @@ public class GameData : MonoBehaviour
 
             if (playerScores.Count > 0)
             {
-                var pair = GetHighestScore();
-
-                int minutes = Mathf.FloorToInt(pair.score / 60.0f);
-
-                string minutesText = minutes < 10 ? "0" + minutes : minutes.ToString();
-
-                int seconds = Mathf.FloorToInt(pair.score - (minutes * 60));
-
-                string secondsText = seconds < 10 ? "0" + seconds : seconds.ToString();
-
-                int microseconds = Mathf.FloorToInt((pair.score - (seconds + (minutes * 60))) * 100);
-
-                string microsecondsText = microseconds < 10 ? "0" + microseconds : microseconds.ToString();
-
-                FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{pair.name}, {minutesText + ":" + secondsText + "." + microsecondsText} minutes";
+                var entry = GetHighestScore();
+                FindAnyObjectByType<TopScorererUI>().topScorererName.text = $"{entry.name}, {FormatToTime(entry)} minutes";
             }
         }
 
@@ -135,17 +138,19 @@ public class GameData : MonoBehaviour
 
     void OnGameEnd()
     {
-        if (playerScores.ContainsKey(PlayerName))
-        {
-            if (playerScores[PlayerName] > timeScore.currentTime)
-            {
-                playerScores[PlayerName] = timeScore.currentTime;
-            }
-        }
-        else
-        {
-            playerScores.Add(PlayerName, timeScore.currentTime);
-        }
+        //if (playerScores.ContainsKey(PlayerName))
+        //{
+        //    if (playerScores[PlayerName] > timeScore.currentTime)
+        //    {
+        //        playerScores[PlayerName] = timeScore.currentTime;
+        //    }
+        //}
+        //else
+        //{
+
+        //}
+
+        playerScores.Add(new Score(PlayerName, timeScore.currentTime));
 
         WriteScoresToFile();
         SceneManager.LoadScene(mainMenuSceneName);

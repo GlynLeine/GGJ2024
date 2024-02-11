@@ -13,7 +13,7 @@ public class Movement : MonoBehaviour
     private AnimationCurve m_slowDownCurve;
     private Vector2 m_movementInput = Vector2.zero;
     public Vector2 MoveInput => m_movementInput;
-    private float m_moveMultiplier = 100.0f;
+    private float m_moveMultiplier = 200.0f;
     private float m_counterMovement = 0.3f;
     private float m_threshold = 0.01f;
 
@@ -117,30 +117,43 @@ public class Movement : MonoBehaviour
     void FixedUpdate()
     {
         m_velocity = m_rb.velocity;
-
+        if (!m_isMoving && m_velocity.magnitude > 0)
+            Debug.Log($"Velocity before we move {m_velocity}");
         Move();
+        if (!m_isMoving && m_velocity.magnitude > 0)
+            Debug.Log($"Velocity After Move: {m_velocity}");
+
+        //Debug.Log($"Rb Velocity After Move: {m_rb.velocity}");
 
         if (!m_isMoving && m_grounded && !m_crouching && m_timeSinceLastMove < m_deccelerationTime)
         {
-            Debug.Log("Slowing Down");
+            //Debug.Log("Slowing Down");
             float fallspeed = m_rb.velocity.y;
             m_timeSinceLastMove += (Time.fixedDeltaTime / m_deccelerationTime);
-            Vector3 n = new Vector3(m_velocity.x, 0, m_velocity.z) * m_slowDownCurve.Evaluate(m_deccelerationTime - m_timeSinceLastMove);
-            m_velocity -= n;
-            m_velocity.y = fallspeed;
+            Vector3 n = new Vector3(m_rb.velocity.x, 0, m_rb.velocity.z) * m_slowDownCurve.Evaluate(m_deccelerationTime - m_timeSinceLastMove);
+            var velocity = m_rb.velocity;
+            velocity -= n;
+            velocity.y = fallspeed;
+            m_velocity = velocity;
         }
-
-        if (!m_grounded)
+        else if (!m_grounded)
         {
+            //Debug.Log($"Velocity After Move: {m_velocity}");
+            //Debug.Log("In Air");
             float fallspeed = m_rb.velocity.y;
             float speed = new Vector3(m_velocity.x, 0, m_velocity.z).magnitude * m_inAirMoveFactor;
-            Vector3 n = m_velocity.normalized * speed;
-            m_rb.velocity += new Vector3(n.x, fallspeed, n.z);
+            Vector3 n = m_rb.velocity.normalized * speed;
+            m_velocity = new Vector3(n.x, fallspeed, n.z);
         }
-        else
+
+        if (m_velocity.magnitude > m_maxSpeed)
         {
-            m_rb.velocity = m_velocity;
+            float fallspeed = m_rb.velocity.y;
+            Vector3 n = m_velocity.normalized * m_maxSpeed;
+            m_velocity = new Vector3(n.x, fallspeed, n.z);
         }
+
+        m_rb.velocity = m_velocity;
 
         if (footAudioSource != null && m_grounded && m_rb.velocity.magnitude > 0)
             footAudioSource.Play();
@@ -151,7 +164,7 @@ public class Movement : MonoBehaviour
         Vector2 inputValue = value.Get<Vector2>();
         m_movementInput = inputValue;
         if (m_wallRunning) m_movementInput.x = 0;
-        m_isMoving = inputValue.x != 0 || inputValue.y != 0;
+        m_isMoving = Mathf.Abs(inputValue.x) > Mathf.Epsilon || Mathf.Abs(inputValue.y) > Mathf.Epsilon;
 
         if (m_isMoving && m_grounded)
             m_timeSinceLastMove = 0;
@@ -170,12 +183,6 @@ public class Movement : MonoBehaviour
             //rb.AddForce(moveSpeed * Time.deltaTime * -rb.velocity.normalized * slideCounterMovement);
         }
 
-        if (m_velocity.magnitude > m_maxSpeed)
-        {
-            float fallspeed = m_rb.velocity.y;
-            Vector3 n = m_velocity.normalized * m_maxSpeed;
-            m_velocity = new Vector3(n.x, fallspeed, n.z);
-        }
     }
 
     public void OnJump()
@@ -194,12 +201,11 @@ public class Movement : MonoBehaviour
                 m_wallRunning = false;
             }
 
-            var projectedVelocity = m_velocity.normalized * .3f;
+            var projectedVelocity = m_velocity.normalized * .6f;
             var force = (Vector3.up + (m_normalVector * .5f) + projectedVelocity).normalized * m_jumpForce;
             var lateralForce = Vector3.ProjectOnPlane(force, m_normalVector);
-            m_rb.AddForce(lateralForce * 150.0f, ForceMode.Force);
+            m_rb.AddForce(lateralForce * 15.0f, ForceMode.Force);
             m_rb.AddForce(force - lateralForce, ForceMode.Impulse);
-
         }
     }
 

@@ -18,10 +18,10 @@ EditorBuildSettings:
     path: Assets/Scenes/GymScene.unity
     guid: bbb2fd6f3700151469f941eff725ba2a
   - enabled: 0
-    path: Assets/Scenes/Game.unity
+    path: Assets/Scenes/Dev Scenes/Game.unity
     guid: 26da56779121c3148aa74a94c486c34d
   - enabled: 0
-    path: Assets/Scenes/RowanNetworking.unity
+    path: Assets/Scenes/Dev Scenes/RowanNetworking.unity
     guid: cb8a553307c5a5147a0ef56fc4a87f99
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 4f0e8503c2cc6b94599b7925bc65cddb,

@@ -7119,7 +7119,7 @@ PrefabInstance:
     - target: {fileID: 1007871184327483295, guid: 11dcc422b50be504e998eeae45272cc9,
         type: 3}
       propertyPath: gameDuration
-      value: 900
+      value: 130
       objectReference: {fileID: 0}
     - target: {fileID: 1007871184327483295, guid: 11dcc422b50be504e998eeae45272cc9,
         type: 3}
@@ -15402,7 +15402,7 @@ PrefabInstance:
     - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
         type: 3}
       propertyPath: m_deccelerationTime
-      value: 0.3
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 4863815606434991560, guid: 7b891cd3974e6554d9335a90fd463ae7,
         type: 3}
