@@ -12,10 +12,10 @@ public class Movement : MonoBehaviour
 {
     public static bool MouseLocked => !Cursor.visible && (Cursor.lockState == CursorLockMode.Locked || Cursor.lockState == CursorLockMode.Confined);
     public bool Grounded => m_grounded;
-    public bool CanSlide => IsMoving && m_grounded && m_running && m_rb.velocity.magnitude > m_slideThresholdSpeed;
-    public bool Sliding => m_crouching && m_grounded && m_rb.velocity.magnitude > 0.5 && m_allowSliding;
+    public bool CanSlide => m_crouching && IsMoving && m_grounded && m_velocity.magnitude > m_slideThresholdSpeed;
+    public bool Sliding => m_crouching && m_grounded && m_velocity.magnitude >= 0.01f && !IsMoving && m_allowSliding;
     public bool CanJump => m_grounded;
-    public bool NeedToSlowDown => !IsMoving && !Sliding && m_grounded;
+    public bool NeedToSlowDown => !IsMoving && !Sliding && m_grounded && m_velocity.magnitude >= 0.01f;
     public bool FreeSliding => m_grounded && isSurfaceFlat(m_normalVector) && m_velocity.magnitude > 0 && !IsMoving;
     public bool IsMoving => MoveInput.magnitude > Mathf.Epsilon;
     public float MaxSpeedAdjustment => (m_crouching && m_grounded ? m_crouchFactor : 1) * (!m_grounded ? m_inAirMoveFactor : 1) * (m_running ? 1 : 1);//gotta implement running at some point lol
@@ -38,6 +38,7 @@ public class Movement : MonoBehaviour
     private Vector3 m_jumpVelocity = Vector3.zero;
     private Vector2 m_movementInput = Vector2.zero;
     private Vector3 m_velocity = Vector2.zero;
+    private Vector3 m_slideVec = Vector3.zero;
 
     [Header("Assignable")]
     [SerializeField] private Transform m_camera;
@@ -45,8 +46,8 @@ public class Movement : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private AnimationCurve m_slowDownCurve;
-    [SerializeField, InfoBox("How fast our character should accelerate to the maxSpeed (units/sec/sec)")] private float m_acceleration = 20f;
-    [SerializeField] private float m_maxSpeed = 50f;
+    [SerializeField, Tooltip("How fast our character should accelerate to the maxSpeed (units/sec/sec)")] private float m_acceleration = 50f;
+    [SerializeField, Tooltip("Max velocity for our character (units/sec)")] private float m_maxSpeed = 15f;
     [SerializeField] public LayerMask m_whatIsGround;
     [SerializeField] private float m_maxSlopeAngle = 35f;
     [SerializeField] private float m_deccelerationTime = 1.0f;
@@ -59,10 +60,11 @@ public class Movement : MonoBehaviour
 
     [Header("Crouch & Slide")]
     [SerializeField] private float m_crouchFactor = 0.5f;
+    [SerializeField] private float m_crouchHeight = .5f;
     [SerializeField] private AnimationCurve m_slideSpeedCurve;
     [SerializeField] private float m_slideTime = 0.0f;
     [SerializeField] private float m_slideThresholdSpeed = 7.0f;
-    [SerializeField] private float m_crouchHeight = .5f;
+
     private float m_timeSinceSlideStart = 0.0f;
 
     private void Start()
@@ -80,10 +82,14 @@ public class Movement : MonoBehaviour
         else
             m_camera.parent.position = new Vector3(m_camera.parent.position.x, m_camera.parent.position.y + m_crouchHeight, m_camera.parent.position.z);
 
-        m_allowSliding = CanSlide && m_crouching;
-
         if (!Sliding)
             m_timeSinceSlideStart = 0;
+
+        m_allowSliding = CanSlide;
+        if (m_allowSliding)
+            m_slideVec = m_velocity.normalized;
+        else
+            m_slideVec = Vector3.zero;
     }
 
     public void OnRun(InputValue value)
@@ -120,30 +126,21 @@ public class Movement : MonoBehaviour
     void FixedUpdate()
     {
         m_velocity = m_rb.velocity;
-
-        ////This should prevent continuous sliding after sliding down a ramp with no input
-        //if (FreeSliding)
-        //{
-        //    m_velocity = Vector3.zero;
-        //}
         Move();
 
-        if (NeedToSlowDown && m_timeSinceLastMove < m_deccelerationTime)
+        if (NeedToSlowDown)
         {
             float fallspeed = m_rb.velocity.y;
-            m_timeSinceLastMove += (Time.fixedDeltaTime / m_deccelerationTime);
-            Vector3 n = new Vector3(m_rb.velocity.x, 0, m_rb.velocity.z) * m_slowDownCurve.Evaluate(m_timeSinceLastMove);
-            var velocity = m_rb.velocity;
-            velocity -= n;
-            velocity.y = fallspeed;
-            m_velocity = velocity;
-        }
+            m_timeSinceLastMove += (Time.fixedDeltaTime);
+            Vector3 n = new Vector3(m_velocity.x, 0, m_velocity.z) * (m_slowDownCurve.Evaluate(m_timeSinceLastMove) * m_deccelerationTime);
+            m_velocity = n;
+            m_velocity.y = fallspeed;
 
-        {
-            Vector3 vec = new Vector3(m_velocity.x, 0, m_velocity.z);
-            vec = Vector3.ProjectOnPlane(vec, m_normalVector);
-            vec.y = m_rb.velocity.y;
-            m_velocity = vec;
+            if (m_velocity.magnitude < 0.1f)
+            {
+                m_timeSinceLastMove = 0;
+                m_velocity = Vector3.zero;
+            }
         }
 
         m_rb.velocity = m_velocity;
@@ -164,15 +161,22 @@ public class Movement : MonoBehaviour
 
     private void Move()
     {
-        if (Sliding && m_timeSinceSlideStart < m_slideTime)
+        if (Sliding && m_allowSliding)
         {
-            m_timeSinceSlideStart += (Time.fixedDeltaTime / m_slideTime);
+            m_timeSinceSlideStart += Time.fixedDeltaTime;
+            var vel = m_slideVec * m_acceleration * Time.fixedDeltaTime;
 
-            var forwardVec = transform.forward * .2f * (m_movementInput.y > 0 ? 0 : m_movementInput.y);//this should cancel any forward input while we're sliding
-            var rightVec = transform.right * m_movementInput.x;
-            var vel = (forwardVec + rightVec).normalized * m_acceleration * Time.fixedDeltaTime;
-            m_velocity += vel;
-            m_velocity += -m_velocity.normalized * m_slideSpeedCurve.Evaluate(m_timeSinceSlideStart);
+            Vector3 n = new Vector3(vel.x, 0, vel.z) * (m_slideSpeedCurve.Evaluate(m_timeSinceSlideStart) * m_slideTime);
+            float fallspeed = m_rb.velocity.y;
+            m_velocity = n;
+            m_velocity.y = fallspeed;
+
+            if (m_velocity.magnitude < 0.1f)
+            {
+                m_timeSinceSlideStart = 0;
+                m_velocity = Vector3.zero;
+                m_allowSliding = false;
+            }
         }
         else
         {
@@ -193,7 +197,7 @@ public class Movement : MonoBehaviour
                 m_velocity += vel;
         }
 
-        if (m_velocity.magnitude > MaxSpeed && m_grounded)
+        if (m_velocity.magnitude > MaxSpeed && m_grounded && !Sliding)
         {
             float fallspeed = m_rb.velocity.y;
             Vector3 n = new Vector3(m_velocity.x, 0, m_velocity.z).normalized * MaxSpeed;
@@ -230,9 +234,6 @@ public class Movement : MonoBehaviour
         m_grounded = false;
     }
 
-    /// <summary>
-    /// Handle ground detection
-    /// </summary>
     private void OnCollisionStay(Collision other)
     {
         //Make sure we are only checking for walkable layers
@@ -273,16 +274,26 @@ public class Movement : MonoBehaviour
         GUIStyle style = new GUIStyle(GUI.skin.textArea);
         style.fontSize = 18;
         style.normal.textColor = Color.black;
-        var topRect = new Rect(10, 10, 200, 50);
+        var topRect = new Rect(10, 10, 300, 50);
         var rectDelta = new Rect(0, topRect.height + 5.0f, 0, 0);
         GUI.Label(topRect, $"CanSlide: {CanSlide}", style);
-        GUI.Label(topRect = topRect.Append(rectDelta), $"Sliding: {Sliding}", style);
-        GUI.Label(topRect = topRect.Append(rectDelta), $"m_AllowSliding: {m_allowSliding}", style);
-        GUI.Label(topRect = topRect.Append(rectDelta), $"Velocity: {m_velocity}", style);
-        GUI.Label(topRect = topRect.Append(rectDelta), $"m_Crouching: {m_crouching}", style);
-        GUI.Label(topRect = topRect.Append(rectDelta), $"m_CrouchFactor: {m_crouchFactor}", style);
-        GUI.Label(topRect = topRect.Append(rectDelta), $"FreeSliding: {FreeSliding}", style);
-        GUI.Label(topRect = topRect.Append(rectDelta), $"Normal Vector: {m_normalVector}", style);
+        //GUI.Label(topRect.Append(rectDelta), $"FreeSliding: {FreeSliding}", style);
+        //GUI.Label(topRect.Append(rectDelta), $"NeedToSlowdown: {NeedToSlowDown}", style);
+        GUI.Label(topRect.Append(rectDelta), $"SlideTime: {m_timeSinceSlideStart}", style);
+        GUI.Label(topRect.Append(rectDelta), $"Sliding: {Sliding}", style);
+        GUI.Label(topRect.Append(rectDelta), $"m_crouching: {m_crouching}", style);
+        GUI.Label(topRect.Append(rectDelta), $"m_grounded: {m_grounded}", style);
+        GUI.Label(topRect.Append(rectDelta), $"Velocity >= 0: {m_velocity.magnitude >= 0.01f}", style);
+        GUI.Label(topRect.Append(rectDelta), $"!IsMoving: {!IsMoving}", style);
+
+        GUI.Label(topRect.Append(rectDelta), $"Velocity: {m_velocity}", style);
+        GUI.Label(topRect.Append(rectDelta), $"Velocity Magnitude: {m_velocity.magnitude}", style);
+
+        //
+        //
+        //GUI.Label(topRect.Append(rectDelta), $"m_Crouching: {m_crouching}", style);
+        //GUI.Label(topRect.Append(rectDelta), $"m_CrouchFactor: {m_crouchFactor}", style);
+        //GUI.Label(topRect.Append(rectDelta), $"Normal Vector: {m_normalVector}", style);
     }
 }
 public static class RectExtensions
@@ -291,8 +302,12 @@ public static class RectExtensions
     {
         return new Rect(rct.x + other.x, rct.y + other.y, rct.width + other.width, rct.height + other.height);
     }
-    public static Rect Append(this Rect rct, Rect other)
+    public static Rect Append(this ref Rect rct, Rect other)
     {
-        return rct = new Rect(rct.x + other.x, rct.y + other.y, rct.width + other.width, rct.height + other.height);
+        rct.x += other.x;
+        rct.y += other.y;
+        rct.width += other.width;
+        rct.height += other.height;
+        return rct;
     }
 }

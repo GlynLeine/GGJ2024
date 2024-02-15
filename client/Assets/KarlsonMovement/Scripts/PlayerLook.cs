@@ -4,19 +4,19 @@ using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Netcode.Components;
+using NaughtyAttributes;
 
 public class PlayerLook : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] WallRun wallRun;
+    [Header("Assignable")]
+    [SerializeField] private WallRun m_wallRun;
+    [SerializeField] private Transform m_orientation = null;
 
-    [SerializeField] private float sensX = 100f;
-    [SerializeField] private float sensY = 100f;
+    [Header("Setttings")]
+    [SerializeField] private float m_sensitivityX = 100f;
+    [SerializeField] private float m_sensitivityY = 100f;
+    [SerializeField, MinMaxSlider(-179,179)] private Vector2 m_pitchRange = new Vector2(-90,90);
 
-    [SerializeField] private Transform orientation = null;
-
-    private float m_mouseX;
-    private float m_mouseY;
     private float m_multiplier = 0.01f;
     private float m_xRotation;
     private float m_yRotation;
@@ -31,15 +31,13 @@ public class PlayerLook : MonoBehaviour
         if (!Movement.MouseLocked) return;
 
         var delta = Mouse.current.delta.ReadValue();
-        m_mouseX = delta.x; 
-        m_mouseY = delta.y;
 
-        m_yRotation += m_mouseX * sensX * m_multiplier;
-        m_xRotation -= m_mouseY * sensY * m_multiplier;
+        m_yRotation += delta.x * m_sensitivityX * m_multiplier;
+        m_xRotation -= delta.y * m_sensitivityY * m_multiplier;
 
-        m_xRotation = Mathf.Clamp(m_xRotation, -90f, 90f);
+        m_xRotation = Mathf.Clamp(m_xRotation, m_pitchRange.x, m_pitchRange.y);
 
-        transform.localRotation = Quaternion.Euler(m_xRotation, 0, wallRun.tilt);
-        orientation.transform.rotation = Quaternion.Euler(0, m_yRotation, 0);
+        transform.localRotation = Quaternion.Euler(m_xRotation, 0, m_wallRun.tilt);
+        m_orientation.transform.rotation = Quaternion.Euler(0, m_yRotation, 0);
     }
 }

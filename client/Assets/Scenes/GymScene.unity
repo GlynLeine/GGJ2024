@@ -1964,7 +1964,7 @@ Transform:
   m_GameObject: {fileID: 153859916}
   serializedVersion: 2
   m_LocalRotation: {x: -0.21263108, y: -0.67437977, z: 0.21263108, w: 0.67437977}
-  m_LocalPosition: {x: -6.0490646, y: 3.82, z: 17.83}
+  m_LocalPosition: {x: -6.0490646, y: 3.8, z: 18.04}
   m_LocalScale: {x: 15, y: 1, z: 7.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7164,6 +7164,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 772f7c8e3aa16a84cb50bd3b875a1ae0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &880332051 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8398696604337899144, guid: 7b891cd3974e6554d9335a90fd463ae7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2049422957}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &880332052 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4351281389870807324, guid: 7b891cd3974e6554d9335a90fd463ae7,
+    type: 3}
+  m_PrefabInstance: {fileID: 2049422957}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02c4d4837e5dcbd4d96075834d433fad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &895797117
@@ -18773,8 +18791,158 @@ PrefabInstance:
     - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
         type: 3}
       propertyPath: m_maxSpeed
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideTime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_crouchFactor
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideThresholdSpeed
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[1].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[1].time
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[2].time
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[0].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[1].value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[2].value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[0].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[1].inWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[0].inSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[1].inSlope
+      value: 0.019806296
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[2].inSlope
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[0].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[1].outWeight
+      value: 0.33333334
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[0].outSlope
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[1].inWeight
+      value: 0.18479693
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[1].outSlope
+      value: 0.019806296
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[2].inWeight
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[2].outSlope
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[1].outWeight
+      value: 0.21719874
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[0].tangentMode
+      value: 136
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slowDownCurve.m_Curve.Array.data[1].tangentMode
+      value: 136
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[1].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 279790777112574147, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_slideSpeedCurve.m_Curve.Array.data[2].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 537597270806794301, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_wallRun
+      value: 
+      objectReference: {fileID: 880332052}
+    - target: {fileID: 537597270806794301, guid: 7b891cd3974e6554d9335a90fd463ae7,
+        type: 3}
+      propertyPath: m_orientation
+      value: 
+      objectReference: {fileID: 880332051}
     - target: {fileID: 4351281389870807324, guid: 7b891cd3974e6554d9335a90fd463ae7,
         type: 3}
       propertyPath: m_Enabled
